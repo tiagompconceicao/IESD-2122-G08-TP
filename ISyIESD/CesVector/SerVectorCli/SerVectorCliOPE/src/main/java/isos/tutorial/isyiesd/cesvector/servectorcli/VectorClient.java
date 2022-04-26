@@ -18,14 +18,14 @@ public class VectorClient {
 
         v = port.read(0);
         res = v - x;
-        Thread.sleep(1);
+        Thread.sleep(100);
 
         port.write(0, res);
-        Thread.sleep(10);
+        Thread.sleep(100);
 
         v = port.read(2);
         res = v + x;
-        Thread.sleep(10);
+        Thread.sleep(100);
 
         port.write(2, res);
 
