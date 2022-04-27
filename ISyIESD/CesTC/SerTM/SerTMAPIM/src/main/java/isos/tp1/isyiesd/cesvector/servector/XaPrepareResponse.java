@@ -8,12 +8,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * &lt;p&gt;Java class for ax_regResponse complex type.
+ * &lt;p&gt;Java class for xa_prepareResponse complex type.
  * 
  * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
  * 
  * &lt;pre&gt;
- * &amp;lt;complexType name="ax_regResponse"&amp;gt;
+ * &amp;lt;complexType name="xa_prepareResponse"&amp;gt;
  *   &amp;lt;complexContent&amp;gt;
  *     &amp;lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&amp;gt;
  *       &amp;lt;sequence&amp;gt;
@@ -27,10 +27,10 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ax_regResponse", propOrder = {
+@XmlType(name = "xa_prepareResponse", propOrder = {
     "_return"
 })
-public class AxRegResponse {
+public class XaPrepareResponse {
 
     @XmlElement(name = "return")
     protected boolean _return;

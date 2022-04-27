@@ -1,5 +1,5 @@
 
-package isos.tp1.isyiesd.cesvector.servector;
+package isos.tp1.isyiesd.cestc.sertm;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -32,8 +32,8 @@ public interface ITransactionManagerAX {
      */
     @WebMethod(operationName = "ax_reg")
     @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "ax_reg", targetNamespace = "http://iesd21.isos.isyiesd.cestc.sertmserver", className = "isos.tp1.isyiesd.cesvector.servector.AxReg")
-    @ResponseWrapper(localName = "ax_regResponse", targetNamespace = "http://iesd21.isos.isyiesd.cestc.sertmserver", className = "isos.tp1.isyiesd.cesvector.servector.AxRegResponse")
+    @RequestWrapper(localName = "ax_reg", targetNamespace = "http://iesd21.isos.isyiesd.cestc.sertmserver", className = "isos.tp1.isyiesd.cestc.sertm.AxReg")
+    @ResponseWrapper(localName = "ax_regResponse", targetNamespace = "http://iesd21.isos.isyiesd.cestc.sertmserver", className = "isos.tp1.isyiesd.cestc.sertm.AxRegResponse")
     @Action(input = "http://iesd21.isos.isyiesd.cestc.sertmserver/ITransactionManagerAX/ax_regRequest", output = "http://iesd21.isos.isyiesd.cestc.sertmserver/ITransactionManagerAX/ax_regResponse")
     public boolean axReg(
         @WebParam(name = "arg0", targetNamespace = "")

@@ -41,7 +41,7 @@
                                 <wsdlUrl>http://localhost:2059/TransactionManagerAX?wsdl</wsdlUrl>
                             </wsdlUrls>
                             <bindingDirectory>${basedir}/src/main/resources/jaxws</bindingDirectory>
-                            <packageName>isos.tp1.isyiesd.cesvector.servector</packageName>
+                            <packageName>isos.tp1.isyiesd.cestc.sertm</packageName>
                             <sourceDestDir>${basedir}/src/main/java</sourceDestDir>
                         </configuration>
                     </execution>

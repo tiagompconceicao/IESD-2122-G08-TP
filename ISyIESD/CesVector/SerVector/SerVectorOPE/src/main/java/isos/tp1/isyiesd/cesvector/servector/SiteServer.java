@@ -8,9 +8,12 @@ import javax.xml.ws.Endpoint;
 public class SiteServer {
 
     public static void main(String[] args) {
-        Endpoint ep = Endpoint.create(new Vector());
-        System.out.println("Starting SiteServer...");
-        ep.publish("http://localhost:2058/Vector");
+        Endpoint vectorEndpoint = Endpoint.create(new Vector());
+        Endpoint vectorXAEndpoint = Endpoint.create(new VectorXA());
+        System.out.println("Starting VectorServer...");
+        vectorEndpoint.publish("http://localhost:2058/Vector");
+        System.out.println("Starting VectorXAServer...");
+        vectorXAEndpoint.publish("http://localhost:2058/VectorXA");
     }
 
 }

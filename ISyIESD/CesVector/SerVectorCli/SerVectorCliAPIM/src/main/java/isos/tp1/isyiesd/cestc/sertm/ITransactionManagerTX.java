@@ -27,21 +27,6 @@ public interface ITransactionManagerTX {
 
     /**
      * 
-     * @param arg0
-     * @return
-     *     returns boolean
-     */
-    @WebMethod(operationName = "tx_rollback")
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "tx_rollback", targetNamespace = "http://iesd21.isos.isyiesd.cestc.sertmserver", className = "sertmserver.cestc.isyiesd.isos.iesd21.TxRollback")
-    @ResponseWrapper(localName = "tx_rollbackResponse", targetNamespace = "http://iesd21.isos.isyiesd.cestc.sertmserver", className = "sertmserver.cestc.isyiesd.isos.iesd21.TxRollbackResponse")
-    @Action(input = "http://iesd21.isos.isyiesd.cestc.sertmserver/ITransactionManagerTX/tx_rollbackRequest", output = "http://iesd21.isos.isyiesd.cestc.sertmserver/ITransactionManagerTX/tx_rollbackResponse")
-    public boolean txRollback(
-        @WebParam(name = "arg0", targetNamespace = "")
-        int arg0);
-
-    /**
-     * 
      * @return
      *     returns int
      */
@@ -64,6 +49,21 @@ public interface ITransactionManagerTX {
     @ResponseWrapper(localName = "tx_commitResponse", targetNamespace = "http://iesd21.isos.isyiesd.cestc.sertmserver", className = "sertmserver.cestc.isyiesd.isos.iesd21.TxCommitResponse")
     @Action(input = "http://iesd21.isos.isyiesd.cestc.sertmserver/ITransactionManagerTX/tx_commitRequest", output = "http://iesd21.isos.isyiesd.cestc.sertmserver/ITransactionManagerTX/tx_commitResponse")
     public boolean txCommit(
+        @WebParam(name = "arg0", targetNamespace = "")
+        int arg0);
+
+    /**
+     * 
+     * @param arg0
+     * @return
+     *     returns boolean
+     */
+    @WebMethod(operationName = "tx_rollback")
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "tx_rollback", targetNamespace = "http://iesd21.isos.isyiesd.cestc.sertmserver", className = "sertmserver.cestc.isyiesd.isos.iesd21.TxRollback")
+    @ResponseWrapper(localName = "tx_rollbackResponse", targetNamespace = "http://iesd21.isos.isyiesd.cestc.sertmserver", className = "sertmserver.cestc.isyiesd.isos.iesd21.TxRollbackResponse")
+    @Action(input = "http://iesd21.isos.isyiesd.cestc.sertmserver/ITransactionManagerTX/tx_rollbackRequest", output = "http://iesd21.isos.isyiesd.cestc.sertmserver/ITransactionManagerTX/tx_rollbackResponse")
+    public boolean txRollback(
         @WebParam(name = "arg0", targetNamespace = "")
         int arg0);
 

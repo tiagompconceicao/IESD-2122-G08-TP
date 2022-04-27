@@ -1,22 +1,23 @@
 
-package isos.tp1.isyiesd.cesvector.servector;
+package isos.tp1.isyiesd.cestc.sertm;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * &lt;p&gt;Java class for read complex type.
+ * &lt;p&gt;Java class for ax_regResponse complex type.
  * 
  * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
  * 
  * &lt;pre&gt;
- * &amp;lt;complexType name="read"&amp;gt;
+ * &amp;lt;complexType name="ax_regResponse"&amp;gt;
  *   &amp;lt;complexContent&amp;gt;
  *     &amp;lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&amp;gt;
  *       &amp;lt;sequence&amp;gt;
- *         &amp;lt;element name="arg0" type="{http://www.w3.org/2001/XMLSchema}int"/&amp;gt;
+ *         &amp;lt;element name="return" type="{http://www.w3.org/2001/XMLSchema}boolean"/&amp;gt;
  *       &amp;lt;/sequence&amp;gt;
  *     &amp;lt;/restriction&amp;gt;
  *   &amp;lt;/complexContent&amp;gt;
@@ -26,27 +27,28 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "read", propOrder = {
-    "arg0"
+@XmlType(name = "ax_regResponse", propOrder = {
+    "_return"
 })
-public class Read {
+public class AxRegResponse {
 
-    protected int arg0;
+    @XmlElement(name = "return")
+    protected boolean _return;
 
     /**
-     * Gets the value of the arg0 property.
+     * Gets the value of the return property.
      * 
      */
-    public int getArg0() {
-        return arg0;
+    public boolean isReturn() {
+        return _return;
     }
 
     /**
-     * Sets the value of the arg0 property.
+     * Sets the value of the return property.
      * 
      */
-    public void setArg0(int value) {
-        this.arg0 = value;
+    public void setReturn(boolean value) {
+        this._return = value;
     }
 
 }

@@ -7,12 +7,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * &lt;p&gt;Java class for ax_reg complex type.
+ * &lt;p&gt;Java class for xa_commit complex type.
  * 
  * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
  * 
  * &lt;pre&gt;
- * &amp;lt;complexType name="ax_reg"&amp;gt;
+ * &amp;lt;complexType name="xa_commit"&amp;gt;
  *   &amp;lt;complexContent&amp;gt;
  *     &amp;lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&amp;gt;
  *       &amp;lt;sequence&amp;gt;
@@ -26,10 +26,10 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ax_reg", propOrder = {
+@XmlType(name = "xa_commit", propOrder = {
     "arg0"
 })
-public class AxReg {
+public class XaCommit {
 
     protected int arg0;
 
