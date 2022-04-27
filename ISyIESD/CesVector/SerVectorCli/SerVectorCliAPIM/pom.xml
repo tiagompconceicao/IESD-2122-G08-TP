@@ -40,9 +40,8 @@
 						<configuration>
 							<wsdlUrls>
 								<wsdlUrl>http://localhost:2058/Vector?wsdl</wsdlUrl>
+								<wsdlUrl>http://localhost:2059/TransactionManagerTX?wsdl</wsdlUrl>
 							</wsdlUrls>
-							<bindingDirectory>${basedir}/src/main/resources/jaxws</bindingDirectory>
-							<packageName>isos.tp1.isyiesd.cesvector.servector</packageName>
 							<sourceDestDir>${basedir}/src/main/java</sourceDestDir>
 						</configuration>
 					</execution>

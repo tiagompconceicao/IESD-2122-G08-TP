@@ -30,8 +30,9 @@
     </properties>
 
 	<modules>
-		<module>CesVector</module>
 		<module>CesTC</module>
+		<module>CesVector</module>
+
 
 	</modules>
 
