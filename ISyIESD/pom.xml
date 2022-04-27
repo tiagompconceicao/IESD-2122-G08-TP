@@ -5,7 +5,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	
-	<groupId>isos.tutorial</groupId>
+	<groupId>isos.tp1</groupId>
 	<artifactId>ISyIESD</artifactId>
 	<version>0.1.0</version>
 	<packaging>pom</packaging>
@@ -32,6 +32,7 @@
 	<modules>
 		<module>CesVector</module>
 		<module>CesTC</module>
+
 	</modules>
 
 	<build>

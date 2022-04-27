@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>isos.tutorial.isyiesd.cestc</groupId>
+        <groupId>isos.tp1.isyiesd.cestc</groupId>
         <artifactId>SerTM</artifactId>
         <version>0.1.0</version>
     </parent>
 
-    <groupId>isos.tutorial.isyiesd.cestc.sertm</groupId>
     <artifactId>SerTMOPE</artifactId>
+    <packaging>pom</packaging>
     <name>${module.type} SerVectorOPE</name>
 
     <properties>
@@ -20,7 +20,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>isos.tutorial.isyiesd.cestc.sertm</groupId>
+            <groupId>isos.tp1.isyiesd.cestc.sertm</groupId>
             <artifactId>SerTMAPIM</artifactId>
             <version>0.1.0</version>
         </dependency>

@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>isos.tutorial.isyiesd.cesvector</groupId>
+        <groupId>isos.tp1.isyiesd.cesvector</groupId>
         <artifactId>SerVector</artifactId>
         <version>0.1.0</version>
     </parent>
 
-    <groupId>isos.tutorial.isyiesd.cesvector.servector</groupId>
+    <groupId>isos.tp1.isyiesd.cesvector.servector</groupId>
     <artifactId>SerVectorOPE</artifactId>
     <name>${module.type} SerVectorOPE</name>
 
@@ -20,7 +20,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>isos.tutorial.isyiesd.cesvector.servector</groupId>
+            <groupId>isos.tp1.isyiesd.cesvector.servector</groupId>
             <artifactId>SerVectorAPIM</artifactId>
             <version>0.1.0</version>
         </dependency>

@@ -6,12 +6,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>isos.tutorial.isyiesd.cesvector</groupId>
+		<groupId>isos.tp1.isyiesd.cesvector</groupId>
 		<artifactId>SerVectorCli</artifactId>
 		<version>0.1.0</version>
 	</parent>
 
-	<groupId>isos.tutorial.isyiesd.cesvector.servectorcli</groupId>
+	<groupId>isos.tp1.isyiesd.cesvector.servectorcli</groupId>
 	<artifactId>SerVectorCliOPE</artifactId>
 	<version>0.1.0</version>
 
@@ -23,7 +23,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>isos.tutorial.isyiesd.cesvector.servectorcli</groupId>
+			<groupId>isos.tp1.isyiesd.cesvector.servectorcli</groupId>
 			<artifactId>SerVectorCliAPIM</artifactId>
 			<version>0.1.0</version>
 		</dependency>

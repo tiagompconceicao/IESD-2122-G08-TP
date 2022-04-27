@@ -6,12 +6,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>isos.tutorial</groupId>
+		<groupId>isos.tp1</groupId>
 		<artifactId>ISyIESD</artifactId>
 		<version>0.1.0</version>
 	</parent>
 
-	<groupId>isos.tutorial.isyiesd</groupId>
+	<groupId>isos.tp1.isyiesd</groupId>
 	<artifactId>CesVector</artifactId>
 	<packaging>pom</packaging>
 	<name>${module.type} CesVector</name>

@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>isos.tutorial.isyiesd</groupId>
-        <artifactId>CesVector</artifactId>
+        <groupId>isos.tp1.isyiesd</groupId>
+        <artifactId>CesTC</artifactId>
         <version>0.1.0</version>
     </parent>
 
-    <groupId>isos.tutorial.isyiesd.cestc</groupId>
+    <groupId>isos.tp1.isyiesd.cestc</groupId>
     <artifactId>SerTM</artifactId>
     <packaging>pom</packaging>
     <name>${module.type} SerTM</name>
