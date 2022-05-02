@@ -1,0 +1,14 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+option java_multiple_files = true;
+option java_package = "vectorxa";
+
+package forum;
+
+service IVectorXA {
+  rpc xa_reg(RegistryMessage) returns (google.protobuf.Empty);
+}
+
+message RegistryMessage {
+  int32 tid = 1;
+}

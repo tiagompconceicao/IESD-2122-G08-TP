@@ -1,0 +1,20 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+option java_multiple_files = true;
+option java_package = "transactionManagerTX";
+
+package forum;
+
+service ITransactionManagerTX {
+  rpc begin(google.protobuf.Empty) returns (Transaction);
+  rpc commit (Transaction) returns (Result);
+  rpc rollback (Transaction) returns (Result);
+}
+
+message Transaction {
+  int32 tid = 1;
+}
+
+message Result {
+  bool status = 1;
+}
