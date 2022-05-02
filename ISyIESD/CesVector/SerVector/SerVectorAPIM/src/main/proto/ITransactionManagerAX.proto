@@ -1,0 +1,22 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "transactionManagerAX";
+
+package forum;
+
+service ITransactionManagerAX {
+  rpc xa_prepare(Transaction) returns (Result);
+  rpc xa_commit (Transaction) returns (Result);
+  rpc xa_rollback (Transaction) returns (Result);
+}
+
+
+message Transaction {
+  int32 tid = 1;
+}
+
+message Result {
+  bool status = 1;
+}
+
+

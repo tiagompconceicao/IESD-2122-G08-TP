@@ -1,11 +1,11 @@
 syntax = "proto3";
 import "google/protobuf/empty.proto";
 option java_multiple_files = true;
-option java_package = "vectorxa";
+option java_package = "transactionManagerXA";
 
 package forum;
 
-service IVectorXA {
+service ITransactionManagerXA {
   rpc xa_reg(RegistryMessage) returns (google.protobuf.Empty);
 }
 

@@ -1,29 +1,27 @@
 package isos.tp1.isyiesd.cesvector.servector;
 
-import javax.jws.WebService;
+import com.google.protobuf.Empty;
+import io.grpc.stub.StreamObserver;
+import vector.IVectorGrpc;
+import vector.ReadMessage;
+import vector.VectorResponse;
+import vector.WriteMessage;
 import java.util.Arrays;
 import java.util.List;
 
-@WebService(endpointInterface = "isos.tp1.isyiesd.cesvector.servector.IVector")
-public class Vector implements IVector {
+
+public class Vector extends IVectorGrpc.IVectorImplBase{
 
     private static List<Integer> vector = Arrays.asList(300, 234, 56, 789);
 
+
     @Override
-    public int read(int pos) {
-        System.out.println("Reading from vector position " + pos);
-        return vector.get(pos);
+    public void read(ReadMessage message, StreamObserver<VectorResponse> responseObserver){
+        //TODO To be implemented
     }
 
     @Override
-    public void write(int pos, int n) {
-        System.out.println("Writing to vector in position " + pos + " with " + n);
-        vector.set(pos, n);
+    public void write(WriteMessage message, StreamObserver<Empty> responseObserver){
+        //TODO To be implemented
     }
-
-	@Override
-	public String invariantCheck() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

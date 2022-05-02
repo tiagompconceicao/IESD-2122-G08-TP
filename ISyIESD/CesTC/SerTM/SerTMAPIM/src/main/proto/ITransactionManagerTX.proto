@@ -6,9 +6,9 @@ option java_package = "transactionManagerTX";
 package forum;
 
 service ITransactionManagerTX {
-  rpc begin(google.protobuf.Empty) returns (Transaction);
-  rpc commit (Transaction) returns (Result);
-  rpc rollback (Transaction) returns (Result);
+  rpc tx_begin(google.protobuf.Empty) returns (Transaction);
+  rpc tx_commit (Transaction) returns (Result);
+  rpc tx_rollback (Transaction) returns (Result);
 }
 
 message Transaction {

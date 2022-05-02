@@ -22,7 +22,6 @@
 	</properties>
 
 	<modules>
-		<module>SerVectorCliAPIM</module>
 		<module>SerVectorCliOPE</module>
 	</modules>
 

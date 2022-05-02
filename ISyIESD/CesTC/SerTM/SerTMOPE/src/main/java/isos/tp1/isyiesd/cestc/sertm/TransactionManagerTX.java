@@ -1,27 +1,25 @@
 package isos.tp1.isyiesd.cestc.sertm;
 
-import javax.jws.WebService;
+import com.google.protobuf.Empty;
+import io.grpc.stub.StreamObserver;
+import transactionManagerTX.ITransactionManagerTXGrpc;
+import transactionManagerTX.Result;
+import transactionManagerTX.Transaction;
 
-@WebService(endpointInterface = "isos.tp1.isyiesd.cestc.sertm.ITransactionManagerTX")
-public class TransactionManagerTX implements ITransactionManagerTX {
-
-    //Must this instance receive a Controller Instance to manage transactions ?
+public class TransactionManagerTX extends ITransactionManagerTXGrpc.ITransactionManagerTXImplBase {
 
     @Override
-    public int tx_begin() {
+    public void txBegin(Empty request, StreamObserver<Transaction> responseObserver) {
         //TODO To be implemented
-        return 0;
     }
 
     @Override
-    public boolean tx_commit(int tid) {
+    public void txCommit(Transaction message, StreamObserver<Result> responseObserver) {
         //TODO To be implemented
-        return false;
     }
 
     @Override
-    public boolean tx_rollback(int tid) {
+    public void txRollback(Transaction message, StreamObserver<Result> responseObserver) {
         //TODO To be implemented
-        return false;
     }
 }
