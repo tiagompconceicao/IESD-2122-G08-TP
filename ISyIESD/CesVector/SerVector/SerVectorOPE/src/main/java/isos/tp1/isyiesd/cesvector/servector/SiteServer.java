@@ -15,24 +15,23 @@ import java.util.logging.Logger;
 public class SiteServer {
 
     public static final Logger logger = Logger.getLogger(SiteServer.class.getName());
-    private static String serverIP = "localhost";
+    private static String TMServerIP = "localhost";
+    private static int TMServerPort = 9000;
     private static int serverPort = 9000;
-    private static String managerIP = "localhost";
-    private static int managerPort = 9000;
 
     public static void main(String[] args) {
 
         //Deviamos implementar uma espécie de nó central (tipo servidor JINI para gerir a transparência à localização?)
         switch (args.length){
             case 2:
-                serverPort = Integer.parseInt(args[1]);
+                TMServerPort = Integer.parseInt(args[1]);
             case 1:
-                serverIP = args[0];
+                TMServerIP = args[0];
                 break;
         }
 
         Vector vector = new Vector();
-        TransactionManagerAX transactionManager = new TransactionManagerAX();
+        TransactionManagerAX transactionManager = new TransactionManagerAX(vector);
 
         try {
             //Launching server

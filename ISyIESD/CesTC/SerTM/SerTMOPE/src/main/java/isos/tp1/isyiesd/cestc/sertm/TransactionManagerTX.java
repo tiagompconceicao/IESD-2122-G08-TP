@@ -6,18 +6,36 @@ import transactionManagerTX.ITransactionManagerTXGrpc;
 import transactionManagerTX.Result;
 import transactionManagerTX.Transaction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TransactionManagerTX extends ITransactionManagerTXGrpc.ITransactionManagerTXImplBase {
 
-    @Override
-    public void txBegin(Empty request, StreamObserver<Transaction> responseObserver) {
-        //TODO To be implemented
+
+    private TransactionManager tm;
+    public TransactionManagerTX(TransactionManager transactionManager){
+        this.tm = transactionManager;
     }
 
+
+    //Generates a transaction id, saves it and sends it to the client
+    @Override
+    public void txBegin(Empty request, StreamObserver<Transaction> responseObserver) {
+        int tid = tm.createTransaction();
+
+        Transaction transaction = Transaction.newBuilder().setTid(tid).build();
+
+        responseObserver.onNext(transaction);
+        responseObserver.onCompleted();
+    }
+
+    //Calls axPrepare, then if all ok calls axCommit
     @Override
     public void txCommit(Transaction message, StreamObserver<Result> responseObserver) {
         //TODO To be implemented
     }
 
+    //Abort changes, also calls axRollback
     @Override
     public void txRollback(Transaction message, StreamObserver<Result> responseObserver) {
         //TODO To be implemented
