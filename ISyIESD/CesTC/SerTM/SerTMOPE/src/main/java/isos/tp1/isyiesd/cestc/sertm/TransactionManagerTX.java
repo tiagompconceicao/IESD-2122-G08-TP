@@ -29,7 +29,7 @@ public class TransactionManagerTX extends ITransactionManagerTXGrpc.ITransaction
         responseObserver.onCompleted();
     }
 
-    //Calls axPrepare, then if all ok calls axCommit
+    //Checks the list of operations of a transaction ,calls axPrepare for each vector server, then if all ok calls axCommit
     @Override
     public void txCommit(Transaction message, StreamObserver<Result> responseObserver) {
         //TODO To be implemented

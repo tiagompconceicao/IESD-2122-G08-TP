@@ -49,6 +49,8 @@ public class VectorClient {
 
             System.out.println("Transaction created with id: " + transaction.getTid());
 
+            //Missing TLPM Service to get and releases locks
+
             int v, res;
             int x = 100;
 
@@ -70,6 +72,7 @@ public class VectorClient {
             rmStub.write(WriteMessage.newBuilder().setPos(2).setValue(res).build());
 
 
+            //Missing commits or rollbacks calls to Transaction manager
 
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -29,6 +29,7 @@ public class SiteServer {
                 break;
         }
 
+        //Transaction manager instance shared with interfaces TX and XA
         TransactionManager transactionManager = new TransactionManager();
         TransactionManagerTX transactionManagerTX = new TransactionManagerTX(transactionManager);
         TransactionManagerXA transactionManagerXA = new TransactionManagerXA(transactionManager);
