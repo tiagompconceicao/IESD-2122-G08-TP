@@ -18,8 +18,8 @@ import java.util.logging.Logger;
  */
 public class VectorClient {
 
-    private static String serverIP = "localhost";
-    private static final int serverPort = 9000;
+    private static String vectorServerIP = "localhost";
+    private static final int vectorServerPort = 9000;
 
     private static String tmServerIP = "localhost";
     private static final int tmServerPort = 9001;
@@ -30,7 +30,7 @@ public class VectorClient {
 
         ManagedChannel rmChannel=null;
         ManagedChannel tmChannel=null;
-        if (args.length == 1) serverIP = args[0];
+        if (args.length == 1) vectorServerIP = args[0];
         try {
             //Setup connection to transaction manager
             tmChannel = ManagedChannelBuilder.forAddress(tmServerIP, tmServerPort)
@@ -39,7 +39,7 @@ public class VectorClient {
             ITransactionManagerTXGrpc.ITransactionManagerTXBlockingStub tmStub = ITransactionManagerTXGrpc.newBlockingStub(tmChannel);
 
             //Setup connection to resource manager
-            rmChannel = ManagedChannelBuilder.forAddress(serverIP, serverPort)
+            rmChannel = ManagedChannelBuilder.forAddress(vectorServerIP, vectorServerPort)
                     .usePlaintext()
                     .build();
             IVectorGrpc.IVectorBlockingStub rmStub = IVectorGrpc.newBlockingStub(rmChannel);
@@ -54,22 +54,24 @@ public class VectorClient {
             int v, res;
             int x = 100;
 
+            //Calls to Vector already sent with transaction ID
+
             //equivalent to port.read(0);
-            VectorResponse vectorResponse = rmStub.read(ReadMessage.newBuilder().setPos(0).build());
+            VectorResponse vectorResponse = rmStub.read(ReadMessage.newBuilder().setTid(transaction.getTid()).setPos(0).build());
             res = vectorResponse.getValue() - x;
             Thread.sleep(1000);
 
             //equivalent to port.write(0, res);
-            rmStub.write(WriteMessage.newBuilder().setPos(0).setValue(res).build());
+            rmStub.write(WriteMessage.newBuilder().setTid(transaction.getTid()).setPos(0).setValue(res).build());
             Thread.sleep(1000);
 
             //equivalent to port.read(2);
-            v = rmStub.read(ReadMessage.newBuilder().setPos(2).build()).getValue();
+            v = rmStub.read(ReadMessage.newBuilder().setTid(transaction.getTid()).setPos(2).build()).getValue();
             res = v + x;
             Thread.sleep(1000);
 
             //equivalent to port.write(2, res);
-            rmStub.write(WriteMessage.newBuilder().setPos(2).setValue(res).build());
+            rmStub.write(WriteMessage.newBuilder().setTid(transaction.getTid()).setPos(2).setValue(res).build());
 
 
             //Missing commits or rollbacks calls to Transaction manager

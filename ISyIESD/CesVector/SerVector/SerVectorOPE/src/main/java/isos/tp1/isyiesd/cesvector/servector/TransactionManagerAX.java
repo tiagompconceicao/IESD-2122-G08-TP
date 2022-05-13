@@ -4,6 +4,7 @@ import io.grpc.stub.StreamObserver;
 import transactionManagerAX.ITransactionManagerAXGrpc;
 import transactionManagerAX.Result;
 import transactionManagerAX.Transaction;
+import transactionManagerAX.Variance;
 
 
 public class TransactionManagerAX extends ITransactionManagerAXGrpc.ITransactionManagerAXImplBase {
@@ -17,8 +18,9 @@ public class TransactionManagerAX extends ITransactionManagerAXGrpc.ITransaction
 
     //Calculates sum of the values of vector and returns it ???
     @Override
-    public void xaPrepare(Transaction transaction, StreamObserver<Result> responseObserver){
-        //TODO To be implemented
+    public void xaPrepare(Transaction transaction, StreamObserver<Variance> responseObserver){
+        responseObserver.onNext(Variance.newBuilder().setValue(vector.getVariance()).build());
+        responseObserver.onCompleted();
     }
 
 

@@ -16,6 +16,9 @@ public class TransactionManagerXA extends ITransactionManagerXAGrpc.ITransaction
     //Register activity from a transaction
     @Override
     public void xaReg(RegistryMessage message, StreamObserver<Empty> responseObserver){
-        //TODO To be implemented
+        tm.registerActivity(message.getTid(),message.getSender());
+
+        responseObserver.onNext(Empty.newBuilder().build());
+        responseObserver.onCompleted();
     }
 }
