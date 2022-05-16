@@ -32,7 +32,12 @@ public class TransactionManagerTX extends ITransactionManagerTXGrpc.ITransaction
     //Checks the list of operations of a transaction ,calls axPrepare for each vector server, then if all ok calls axCommit
     @Override
     public void txCommit(Transaction message, StreamObserver<Result> responseObserver) {
-        boolean res = tm.commit(message.getTid());
+        boolean res = false;
+        try {
+            res = tm.commit(message.getTid());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         responseObserver.onNext(Result.newBuilder().setStatus(res).build());
         responseObserver.onCompleted();
@@ -41,6 +46,14 @@ public class TransactionManagerTX extends ITransactionManagerTXGrpc.ITransaction
     //Abort changes, also calls axRollback
     @Override
     public void txRollback(Transaction message, StreamObserver<Result> responseObserver) {
-        //TODO To be implemented
+        boolean res = false;
+        try {
+            res = tm.rollback(message.getTid());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        responseObserver.onNext(Result.newBuilder().setStatus(res).build());
+        responseObserver.onCompleted();
     }
 }

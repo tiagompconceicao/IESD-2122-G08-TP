@@ -38,6 +38,7 @@ public class VectorClient {
         ManagedChannel lmChannel=null;
         if (args.length == 1) vectorServerIP = args[0];
         try {
+
             //Setup connection to transaction manager
             tmChannel = ManagedChannelBuilder.forAddress(tmServerIP, tmServerPort)
                     .usePlaintext()
@@ -49,6 +50,7 @@ public class VectorClient {
                     .usePlaintext()
                     .build();
             IVectorGrpc.IVectorBlockingStub rmStub = IVectorGrpc.newBlockingStub(rmChannel);
+
 
             //Setup connection to lock manager
             lmChannel = ManagedChannelBuilder.forAddress(lmServerIP, lmServerPort)
@@ -74,11 +76,11 @@ public class VectorClient {
             //equivalent to port.read(0);
             VectorResponse vectorResponse = rmStub.read(ReadMessage.newBuilder().setTid(transaction.getTid()).setPos(0).build());
             res = vectorResponse.getValue() - x;
-            Thread.sleep(1000);
+            Thread.sleep(100);
 
             //equivalent to port.write(0, res);
             rmStub.write(WriteMessage.newBuilder().setTid(transaction.getTid()).setPos(0).setValue(res).build());
-            Thread.sleep(1000);
+            Thread.sleep(100);
 
             //Unlock position 0
             lmStub.unlock(UnlockRequest.newBuilder().setTid(transaction.getTid()).setPos(0).build());
@@ -91,7 +93,7 @@ public class VectorClient {
             //equivalent to port.read(2);
             v = rmStub.read(ReadMessage.newBuilder().setTid(transaction.getTid()).setPos(2).build()).getValue();
             res = v + x;
-            Thread.sleep(1000);
+            Thread.sleep(100);
 
             //equivalent to port.write(2, res);
             rmStub.write(WriteMessage.newBuilder().setTid(transaction.getTid()).setPos(2).setValue(res).build());
@@ -99,7 +101,6 @@ public class VectorClient {
             //Unlock position 2
             lmStub.unlock(UnlockRequest.newBuilder().setTid(transaction.getTid()).setPos(2).build());
             System.out.println("Lock released");
-
 
             //Commit
             tmStub.txCommit(transaction);
