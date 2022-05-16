@@ -5,28 +5,27 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>isos.tp1.isyiesd.cesvector</groupId>
-        <artifactId>SerVector</artifactId>
+        <groupId>isos.tp1.isyiesd.cestc</groupId>
+        <artifactId>SerTPLM</artifactId>
         <version>0.1.0</version>
     </parent>
 
-    <groupId>isos.tp1.isyiesd.cesvector.servector</groupId>
-    <artifactId>SerVectorOPE</artifactId>
-    <name>${module.type} SerVectorOPE</name>
+    <groupId>isos.tp1.isyiesd.cestc.sertplm</groupId>
+    <artifactId>SerTPLMOPE</artifactId>
+    <name>${module.type} SerTPLMOPE</name>
 
     <properties>
         <module.type>OPE ::</module.type>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>isos.tp1.isyiesd.cesvector.servector</groupId>
-            <artifactId>SerVectorAPIM</artifactId>
-            <version>0.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>isos.tp1.isyiesd.cestc.sertm</groupId>
-            <artifactId>SerTMAPIM</artifactId>
+            <groupId>isos.tp1.isyiesd.cestc.sertplm</groupId>
+            <artifactId>SerTPLMAPIM</artifactId>
             <version>0.1.0</version>
         </dependency>
         <dependency>
@@ -50,10 +49,8 @@
             <version>1.41.0</version>
         </dependency>
         <dependency>
-            <groupId>isos.tp1.isyiesd.cestc.sertm</groupId>
-            <artifactId>SerTMAPIM</artifactId>
-            <version>0.1.0</version>
-            <scope>compile</scope>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
 

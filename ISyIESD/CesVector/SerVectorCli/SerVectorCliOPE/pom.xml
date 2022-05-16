@@ -32,6 +32,11 @@
 			<version>0.1.0</version>
 		</dependency>
 		<dependency>
+			<groupId>isos.tp1.isyiesd.cestc.sertplm</groupId>
+			<artifactId>SerTPLMAPIM</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>isos.tp1.isyiesd.cestc.sertm</groupId>
 			<artifactId>SerTMAPIM</artifactId>
 			<version>0.1.0</version>

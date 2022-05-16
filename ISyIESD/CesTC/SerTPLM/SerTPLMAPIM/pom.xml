@@ -3,31 +3,30 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+    <version>0.1.0</version>
 
     <parent>
-        <groupId>isos.tp1.isyiesd.cesvector</groupId>
-        <artifactId>SerVector</artifactId>
+        <groupId>isos.tp1.isyiesd.cestc</groupId>
+        <artifactId>SerTPLM</artifactId>
         <version>0.1.0</version>
     </parent>
 
-    <groupId>isos.tp1.isyiesd.cesvector.servector</groupId>
-    <artifactId>SerVectorOPE</artifactId>
-    <name>${module.type} SerVectorOPE</name>
+    <groupId>isos.tp1.isyiesd.cestc.sertplm</groupId>
+    <artifactId>SerTPLMAPIM</artifactId>
+    <name>${module.type} SerTPLMAPIM</name>
 
     <properties>
-        <module.type>OPE ::</module.type>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <module.type>API ::</module.type>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>isos.tp1.isyiesd.cesvector.servector</groupId>
-            <artifactId>SerVectorAPIM</artifactId>
-            <version>0.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>isos.tp1.isyiesd.cestc.sertm</groupId>
-            <artifactId>SerTMAPIM</artifactId>
-            <version>0.1.0</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.annotation</groupId>
@@ -37,38 +36,56 @@
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty-shaded</artifactId>
-            <version>1.41.0</version>
+            <version>1.46.0</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-protobuf</artifactId>
-            <version>1.41.0</version>
+            <version>1.46.0</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-stub</artifactId>
-            <version>1.41.0</version>
-        </dependency>
-        <dependency>
-            <groupId>isos.tp1.isyiesd.cestc.sertm</groupId>
-            <artifactId>SerTMAPIM</artifactId>
-            <version>0.1.0</version>
-            <scope>compile</scope>
+            <version>1.46.0</version>
         </dependency>
     </dependencies>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.5.0.Final</version>
+            </extension>
+        </extensions>
         <plugins>
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+                <configuration>
+                    <protocArtifact>com.google.protobuf:protoc:3.11.0:exe:${os.detected.classifier}</protocArtifact>
+                    <pluginId>grpc-java</pluginId>
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.28.1:exe:${os.detected.classifier}</pluginArtifact>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.1.1</version>
                 <configuration>
-
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-
                 </configuration>
                 <executions>
                     <execution>

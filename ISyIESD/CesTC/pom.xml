@@ -29,6 +29,7 @@
 
 	<modules>
 		<module>SerTM</module>
+		<module>SerTPLM</module>
 	</modules>
 
 	<dependencyManagement>

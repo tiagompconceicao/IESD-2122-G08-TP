@@ -1,0 +1,25 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+option java_multiple_files = true;
+option java_package = "lockManager";
+
+package forum;
+
+service ILockManager {
+  rpc lock(LockRequest) returns (google.protobuf.Empty);
+  rpc unlock(UnlockRequest) returns (google.protobuf.Empty);
+}
+
+message UnlockRequest{
+  int32 tid = 1;
+  int32 pos = 2;
+}
+
+message LockRequest{
+  int32 tid = 1;
+  int32 pos = 2;
+}
+
+message Result {
+  bool status = 1;
+}
