@@ -12,23 +12,27 @@ import java.util.logging.Logger;
 public class SiteServer {
 
     public static final Logger logger = Logger.getLogger(SiteServer.class.getName());
-    private static String serverIP = "localhost";
-    private static int serverPort = 9000;
-    private static String managerIP = "localhost";
-    private static int managerPort = 9000;
+    private static String rmServerIP = "localhost";
+    private static int rmServerPort = 9000;
+    private static int serverPort = 9001;
+
     public static void main(String[] args) {
 
         //Deviamos implementar uma espécie de nó central (tipo servidor JINI para gerir a transparência à localização?)
         switch (args.length){
+            case 3:
+                serverPort = Integer.parseInt(args[2]);
             case 2:
-                serverPort = Integer.parseInt(args[1]);
+                rmServerPort = Integer.parseInt(args[1]);
             case 1:
-                serverIP = args[0];
+                rmServerIP = args[0];
                 break;
         }
 
-        TransactionManagerTX transactionManagerTX = new TransactionManagerTX();
-        TransactionManagerXA transactionManagerXA = new TransactionManagerXA();
+        //Transaction manager instance shared with interfaces TX and XA
+        TransactionManager transactionManager = new TransactionManager();
+        TransactionManagerTX transactionManagerTX = new TransactionManagerTX(transactionManager);
+        TransactionManagerXA transactionManagerXA = new TransactionManagerXA(transactionManager);
 
         try {
             //Launching server
@@ -44,7 +48,5 @@ public class SiteServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 }

@@ -12,11 +12,13 @@ service IVector {
 
 message ReadMessage {
   int32 pos = 1;
+  int32 tid = 2;
 }
 
 message WriteMessage {
   int32 pos = 1;
   int32 value = 2;
+  int32 tid = 3;
 }
 
 message VectorResponse {

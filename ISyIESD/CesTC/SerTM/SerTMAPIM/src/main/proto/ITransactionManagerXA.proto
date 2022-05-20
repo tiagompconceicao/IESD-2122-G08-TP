@@ -11,4 +11,5 @@ service ITransactionManagerXA {
 
 message RegistryMessage {
   int32 tid = 1;
+  string sender = 2;
 }
