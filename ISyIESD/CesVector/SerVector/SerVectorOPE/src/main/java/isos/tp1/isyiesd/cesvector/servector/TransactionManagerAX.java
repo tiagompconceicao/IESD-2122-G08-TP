@@ -19,8 +19,7 @@ public class TransactionManagerAX extends ITransactionManagerAXGrpc.ITransaction
     //Calculates sum of the values of vector and returns it ???
     @Override
     public void xaPrepare(Transaction transaction, StreamObserver<Variance> responseObserver){
-        responseObserver.onNext(Variance.newBuilder().setValue(vector.getVariance()).build());
-        responseObserver.onCompleted();
+        //TODO To be implemented
     }
 
 

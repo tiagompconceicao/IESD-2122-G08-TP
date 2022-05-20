@@ -42,18 +42,22 @@ public class TransactionManager {
     public boolean commit(int tid) throws InterruptedException {
         boolean res;
         synchronized (lock) {
+            //Get connection to all vector server that the transaction tid communicated
+            //Run xaPrepare for all vector servers
+            //When all ok, run xaCommit for all vector servers
+
+            //create connections to the vector servers that the transaction tid communicated
             createTransactionConnections(tid);
-            /*if(checkVariance(tid)){
-                for (ITransactionManagerAXGrpc.ITransactionManagerAXBlockingStub stub: stubs) {
-                    stub.xaCommit(Transaction.newBuilder().setTid(tid).build());
-                }
-                res = true;
-            } else {
-                for (ITransactionManagerAXGrpc.ITransactionManagerAXBlockingStub stub: stubs) {
-                    stub.xaRollback(Transaction.newBuilder().setTid(tid).build());
-                }
-                res = false;
-            }*/
+
+            //Prepare
+            for (ITransactionManagerAXGrpc.ITransactionManagerAXBlockingStub stub: stubs) {
+                stub.xaPrepare(Transaction.newBuilder().setTid(tid).build());
+            }
+
+            //Commit
+            for (ITransactionManagerAXGrpc.ITransactionManagerAXBlockingStub stub: stubs) {
+                stub.xaCommit(Transaction.newBuilder().setTid(tid).build());
+            }
 
             for (ManagedChannel channel:servers){
                 channel.shutdown().awaitTermination(1, TimeUnit.MILLISECONDS);
@@ -79,32 +83,16 @@ public class TransactionManager {
         return true;
     }
 
-    /*
-    private boolean checkVariance(int tid){
-        int sum = 0;
-        for (ITransactionManagerAXGrpc.ITransactionManagerAXBlockingStub stub: stubs) {
-            Variance variance = stub.xaPrepare(Transaction.newBuilder().setTid(tid).build());
-            sum += variance.getValue();
-        }
-        return sum == 0;
-    }
-    */
-
-
     private void createTransactionConnections(int tid){
         servers.clear();
         stubs.clear();
         for (String server: transactions.get(tid)){
-            ManagedChannel channel = createConnection(server, 9000);
+            ManagedChannel channel = ManagedChannelBuilder.forAddress(server, 9000)
+                    .usePlaintext()
+                    .build();
             servers.add(channel);
             ITransactionManagerAXGrpc.ITransactionManagerAXBlockingStub stub = ITransactionManagerAXGrpc.newBlockingStub(channel);
             stubs.add(stub);
         }
-    }
-
-    private ManagedChannel createConnection(String serverIP, int serverPort){
-        return ManagedChannelBuilder.forAddress(serverIP, serverPort)
-                .usePlaintext()
-                .build();
     }
 }

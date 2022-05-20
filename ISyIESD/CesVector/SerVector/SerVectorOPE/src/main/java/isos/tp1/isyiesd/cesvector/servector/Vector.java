@@ -18,15 +18,14 @@ public class Vector extends IVectorGrpc.IVectorImplBase{
 
     private final List<Integer> vector = Arrays.asList(300, 234, 56, 789);
     private static final Object lock = new Object();
-    private String serverIP;
-    private ManagedChannel tmChannel;
-    private ITransactionManagerXAGrpc.ITransactionManagerXABlockingStub tmStub;
+    private final String serverIP;
+    private final ITransactionManagerXAGrpc.ITransactionManagerXABlockingStub tmStub;
 
 
     public Vector(String serverIP,String tmServerIP, int tmServerPort){
         this.serverIP = serverIP;
         //Setup connection to resource manager
-        tmChannel = ManagedChannelBuilder.forAddress(tmServerIP, tmServerPort)
+        ManagedChannel tmChannel = ManagedChannelBuilder.forAddress(tmServerIP, tmServerPort)
                 .usePlaintext()
                 .build();
 
