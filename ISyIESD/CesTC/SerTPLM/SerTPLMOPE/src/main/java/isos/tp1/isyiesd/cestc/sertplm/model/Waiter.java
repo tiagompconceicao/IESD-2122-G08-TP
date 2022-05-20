@@ -4,20 +4,22 @@ import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
 import lockManager.LockElement;
 
+import java.util.ArrayList;
+
 public class Waiter {
 
     private int tid;
-    private LockElement lockElement;
+    private ArrayList<LockElement> lockElements;
     private StreamObserver<Empty> responseObserver;
 
-    public Waiter(LockElement lockElement, StreamObserver<Empty> responseObserver, int tid){
+    public Waiter(ArrayList<LockElement> lockElements, StreamObserver<Empty> responseObserver, int tid){
         this.tid = tid;
-        this.lockElement = lockElement;
+        this.lockElements = lockElements;
         this.responseObserver = responseObserver;
     }
 
-    public LockElement getLockElement() {
-        return lockElement;
+    public ArrayList<LockElement> getLockElements() {
+        return lockElements;
     }
 
     public StreamObserver<Empty> getResponseObserver() {

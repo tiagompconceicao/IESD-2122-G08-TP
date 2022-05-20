@@ -21,6 +21,9 @@ import java.util.logging.Logger;
  */
 public class VectorClient {
 
+    private static final String READ_MODE = "read";
+    private static final String WRITE_MODE = "write";
+
     private static String vectorServerIP = "localhost";
     private static final int vectorServerPort = 9000;
 
@@ -64,26 +67,43 @@ public class VectorClient {
 
             System.out.println("Transaction created with id: " + transaction.getTid());
 
+            int tid = transaction.getTid();
+            LockRequest locksRequest = LockRequest.newBuilder().setTid(tid)
+                    .setLocks(0, LockElement.newBuilder().setPos(0).setLockMode(READ_MODE).setTid(tid).build())
+                    .setLocks(1, LockElement.newBuilder().setPos(0).setLockMode(WRITE_MODE).setTid(tid).build())
+                    .setLocks(2, LockElement.newBuilder().setPos(2).setLockMode(READ_MODE).setTid(tid).build())
+                    .setLocks(3, LockElement.newBuilder().setPos(2).setLockMode(WRITE_MODE).setTid(tid).build())
+                    .build();
+
+            //Get all necessary locks
+            lmStub.getLocks(locksRequest);
+            System.out.println("Lock acquired");
+
+
             int v, res;
             int x = 100;
 
             //equivalent to port.read(0);
-            int y = read(transaction,lmStub,rmStub,0);
+            int y = rmStub.read(ReadMessage.newBuilder().setTid(transaction.getTid()).setPos(0).build()).getValue();
             res = y - x;
             Thread.sleep(100);
 
             //equivalent to port.write(0, res);
-            write(transaction,lmStub,rmStub,0,res);
+            rmStub.write(WriteMessage.newBuilder().setTid(transaction.getTid()).setPos(0).setValue(res).build());
             Thread.sleep(100);
 
 
             //equivalent to port.read(2);
-            v = read(transaction,lmStub,rmStub,2);
+            v = rmStub.read(ReadMessage.newBuilder().setTid(transaction.getTid()).setPos(2).build()).getValue();
             res = v + x;
             Thread.sleep(100);
 
             //equivalent to port.write(2, res);
-            write(transaction,lmStub,rmStub,2,res);
+            rmStub.write(WriteMessage.newBuilder().setTid(transaction.getTid()).setPos(2).setValue(res).build());
+
+
+            //Unlock all resources locked
+            lmStub.unlock(UnlockRequest.newBuilder().setTid(transaction.getTid()).build());
 
             //Commit
             //tmStub.txCommit(transaction);
@@ -111,41 +131,5 @@ public class VectorClient {
             lmChannel.shutdown().awaitTermination(2, TimeUnit.SECONDS);
         }
 
-    }
-
-    private static void write(Transaction transaction, ILockManagerGrpc.ILockManagerBlockingStub lmStub, IVectorGrpc.IVectorBlockingStub rmStub, int i, int res) throws InterruptedException {
-        LockElement lock = LockElement.newBuilder().setLockMode("write").setPos(i).build();
-
-        //Lock position 2
-        lmStub.lock(LockRequest.newBuilder().setTid(transaction.getTid()).setLock(lock).build());
-        System.out.println("Lock acquired");
-        Thread.sleep(3000);
-        //equivalent to port.write(2, res);
-        rmStub.write(WriteMessage.newBuilder().setTid(transaction.getTid()).setPos(i).setValue(res).build());
-
-        //Unlock position 2
-        lmStub.unlock(UnlockRequest.newBuilder().setTid(transaction.getTid()).setPos(i).build());
-        System.out.println("Lock released");
-    }
-
-
-    private static int read(Transaction transaction, ILockManagerGrpc.ILockManagerBlockingStub lmStub, IVectorGrpc.IVectorBlockingStub rmStub, int i) throws InterruptedException {
-        int res;
-        LockElement lock = LockElement.newBuilder().setLockMode("read").setPos(i).build();
-
-        //Lock position 2
-        lmStub.lock(LockRequest.newBuilder().setTid(transaction.getTid()).setLock(lock).build());
-        System.out.println("Lock acquired");
-        Thread.sleep(3000);
-
-
-        //equivalent to port.write(2, res);
-        res = rmStub.read(ReadMessage.newBuilder().setTid(transaction.getTid()).setPos(i).build()).getValue();
-
-        //Unlock position 2
-        lmStub.unlock(UnlockRequest.newBuilder().setTid(transaction.getTid()).setPos(i).build());
-        System.out.println("Lock released");
-
-        return res;
     }
 }
