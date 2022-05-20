@@ -5,7 +5,6 @@ import io.grpc.ManagedChannelBuilder;
 import transactionManagerAX.ITransactionManagerAXGrpc;
 import transactionManagerAX.Transaction;
 import transactionManagerAX.Variance;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

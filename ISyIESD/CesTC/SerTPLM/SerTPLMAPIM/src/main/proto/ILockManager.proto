@@ -17,7 +17,12 @@ message UnlockRequest{
 
 message LockRequest{
   int32 tid = 1;
-  int32 pos = 2;
+  LockElement lock = 2;
+}
+
+message LockElement{
+  int32 pos = 1;
+  string lockMode = 2;
 }
 
 message Result {
