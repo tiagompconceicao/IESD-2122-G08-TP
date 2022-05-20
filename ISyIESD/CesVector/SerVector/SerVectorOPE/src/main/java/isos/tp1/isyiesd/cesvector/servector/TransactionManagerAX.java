@@ -16,20 +16,20 @@ public class TransactionManagerAX extends ITransactionManagerAXGrpc.ITransaction
     }
 
 
-    //Calculates sum of the values of vector and returns it ???
+    //Prepares to commit
     @Override
     public void xaPrepare(Transaction transaction, StreamObserver<Variance> responseObserver){
         //TODO To be implemented
     }
 
 
-    //Confirmation of the success of the transaction
+    //Commit
     @Override
     public void xaCommit(Transaction transaction, StreamObserver<Result> responseObserver){
         //TODO To be implemented
     }
 
-    //Rollback the transaction
+    //Rollback
     @Override
     public void xaRollback(Transaction transaction, StreamObserver<Result> responseObserver){
         //TODO To be implemented
