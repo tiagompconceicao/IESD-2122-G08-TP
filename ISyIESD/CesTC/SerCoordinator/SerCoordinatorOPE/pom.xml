@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>isos.tp1.isyiesd.cestc</groupId>
-        <artifactId>SerTPLM</artifactId>
+        <artifactId>SerCoordinator</artifactId>
         <version>0.1.0</version>
     </parent>
 
-    <groupId>isos.tp1.isyiesd.cestc.sertplm</groupId>
-    <artifactId>SerTPLMOPE</artifactId>
-    <name>${module.type} SerTPLMOPE</name>
+    <groupId>isos.tp1.isyiesd.cestc.sercoordinator</groupId>
+    <artifactId>SerCoordinatorOPE</artifactId>
+    <name>${module.type} SerCoordinatorOPE</name>
 
     <properties>
         <module.type>OPE ::</module.type>
@@ -24,13 +24,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>isos.tp1.isyiesd.cestc.sertplm</groupId>
-            <artifactId>SerTPLMAPIM</artifactId>
+            <groupId>isos.tp1.isyiesd.cestc.sercoordinator</groupId>
+            <artifactId>SerCoordinatorAPIM</artifactId>
             <version>0.1.0</version>
         </dependency>
         <dependency>
-            <groupId>isos.tp1.isyiesd.cestc.sercoordinator</groupId>
-            <artifactId>SerCoordinatorAPIM</artifactId>
+            <groupId>isos.tp1.isyiesd.cesvector.servector</groupId>
+            <artifactId>SerVectorAPIM</artifactId>
             <version>0.1.0</version>
         </dependency>
         <dependency>

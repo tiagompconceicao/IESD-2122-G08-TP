@@ -8,17 +8,20 @@ import transactionManagerXA.RegistryMessage;
 
 public class TransactionManagerXA extends ITransactionManagerXAGrpc.ITransactionManagerXAImplBase {
 
-    private TransactionManager tm;
-    public TransactionManagerXA(TransactionManager transactionManager){
+    private TransactionManagerV2 tm;
+    public TransactionManagerXA(TransactionManagerV2 transactionManager){
         this.tm = transactionManager;
     }
 
+    //Por simplificação assumimos que não é necessário um metodo de unregister porque
+    //os TransactionsID são unicos (A não ser que dê a volta a MAX_INTEGER_VALUE).
     //Register activity from a transaction
     @Override
     public void xaReg(RegistryMessage message, StreamObserver<Empty> responseObserver){
-        tm.registerActivity(message.getTid(),message.getSender());
-
-        responseObserver.onNext(Empty.newBuilder().build());
-        responseObserver.onCompleted();
+        tm.registerVectorParticipation(message.getTid(), message.getSender(), responseObserver);
+//        tm.registerActivity(message.getTid(),message.getSender());
+//
+//        responseObserver.onNext(Empty.newBuilder().build());
+//        responseObserver.onCompleted();
     }
 }

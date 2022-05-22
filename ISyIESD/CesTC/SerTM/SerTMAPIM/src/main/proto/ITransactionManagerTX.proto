@@ -8,7 +8,7 @@ package forum;
 service ITransactionManagerTX {
   rpc tx_begin(google.protobuf.Empty) returns (Transaction);
   rpc tx_commit (Transaction) returns (Result);
-  rpc tx_rollback (Transaction) returns (Result);
+  rpc tx_rollback (Transaction) returns (google.protobuf.Empty);
 }
 
 message Transaction {

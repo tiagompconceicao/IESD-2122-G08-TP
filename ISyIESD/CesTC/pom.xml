@@ -30,6 +30,7 @@
 	<modules>
 		<module>SerTM</module>
 		<module>SerTPLM</module>
+		<module>SerCoordinator</module>
 	</modules>
 
 	<dependencyManagement>

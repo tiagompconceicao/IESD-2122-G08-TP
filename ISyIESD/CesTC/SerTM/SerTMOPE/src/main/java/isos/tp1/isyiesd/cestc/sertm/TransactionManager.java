@@ -24,13 +24,11 @@ public class TransactionManager {
     }
 
     public int createTransaction(){
-        int tid;
         synchronized (lock){
-            tid = ++maxTID;
+            int tid = ++maxTID;
             transactions.put(tid,new ArrayList<>());
+            return tid;
         }
-
-        return tid;
     }
 
     public void registerActivity(int tid, String server){

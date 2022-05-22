@@ -1,9 +1,17 @@
 package isos.tp1.isyiesd.cestc.sertm;
 
+import ICoordinator.ICoordinatorGrpc;
+import ICoordinator.ServiceEndpoint;
+import ICoordinator.VectorServices;
+import com.google.protobuf.Empty;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
-import javax.xml.ws.Endpoint;
+//import javax.xml.ws.Endpoint;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -12,37 +20,55 @@ import java.util.logging.Logger;
 public class SiteServer {
 
     public static final Logger logger = Logger.getLogger(SiteServer.class.getName());
-    private static String rmServerIP = "localhost";
-    private static int rmServerPort = 9000;
-    private static int serverPort = 9001;
+    private static String thisIP = "localhost";
+    private static int thisPort = 9001;
+    private static String coordinatorIP = "localhost";
+    private static int coordinatorPort = 9000;
+
 
     public static void main(String[] args) {
-
-        //Deviamos implementar uma espécie de nó central (tipo servidor JINI para gerir a transparência à localização?)
-        switch (args.length){
-            case 3:
-                serverPort = Integer.parseInt(args[2]);
-            case 2:
-                rmServerPort = Integer.parseInt(args[1]);
-            case 1:
-                rmServerIP = args[0];
-                break;
+        if (args.length == 1) {
+            thisPort = Integer.parseInt(args[0]);
+        } else if (args.length == 2) {
+            thisIP = args[0];
+            thisPort = Integer.parseInt(args[1]);
+        } else if (args.length == 4) {
+            thisIP = args[0];
+            thisPort = Integer.parseInt(args[1]);
+            coordinatorIP = args[0];
+            coordinatorPort = Integer.parseInt(args[1]);
         }
-
-        //Transaction manager instance shared with interfaces TX and XA
-        TransactionManager transactionManager = new TransactionManager();
-        TransactionManagerTX transactionManagerTX = new TransactionManagerTX(transactionManager);
-        TransactionManagerXA transactionManagerXA = new TransactionManagerXA(transactionManager);
-
         try {
+            ManagedChannel coordinatorChannel = ManagedChannelBuilder
+              .forAddress(coordinatorIP, coordinatorPort)
+              .usePlaintext()
+              .build();
+            ICoordinatorGrpc.ICoordinatorBlockingStub coordinatorProxy = ICoordinatorGrpc
+              .newBlockingStub(coordinatorChannel);
+
+            coordinatorProxy.registerTM(ServiceEndpoint
+              .newBuilder()
+              .setIp(thisIP)
+              .setPort(thisPort)
+              .setName("TM")
+              .build());
+            VectorServices vs = coordinatorProxy.getVectorServices(Empty.newBuilder().build());
+
+
+            //Tem de conhecer os "nomes" e ip/port dos vectores
+            List<ServiceEndpoint> vectorEndpoints = vs.getVectorsList();
+            //Transaction manager instance shared with interfaces TX and XA
+            TransactionManagerV2 transactionManager = new TransactionManagerV2(vectorEndpoints);
+            TransactionManagerTX transactionManagerTX = new TransactionManagerTX(transactionManager);
+            TransactionManagerXA transactionManagerXA = new TransactionManagerXA(transactionManager);
+
             //Launching server
-            final Server svc = ServerBuilder.forPort(serverPort)
+            final Server svc = ServerBuilder.forPort(thisPort)
                     .addService(transactionManagerTX)
                     .addService(transactionManagerXA)
                     .build()
                     .start();
-            logger.info("Server started, listening on " + serverPort);
-
+            logger.info("Server started, listening on " + thisPort);
             System.err.println("*** server await termination");
             svc.awaitTermination();
         } catch (Exception e) {

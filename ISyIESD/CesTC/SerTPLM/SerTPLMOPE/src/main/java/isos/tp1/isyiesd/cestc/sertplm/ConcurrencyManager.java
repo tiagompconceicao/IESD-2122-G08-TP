@@ -32,6 +32,7 @@ public class ConcurrencyManager extends ILockManagerGrpc.ILockManagerImplBase {
     //lockType_1 = read, lockType_2 = write
     @Override
     public void getLocks(LockRequest req, StreamObserver<Empty> responseObserver) {
+        System.out.println("getLocks Called for Transaction: " + req.getTid());
         lock.lock();
         try{
             transactionScopes.put(req.getTid(), req.getElementsList());
@@ -42,7 +43,7 @@ public class ConcurrencyManager extends ILockManagerGrpc.ILockManagerImplBase {
                 return;
             }
 
-            int timeoutMillis = 30000;
+            int timeoutMillis = 90000;
             long deadline = System.currentTimeMillis() + timeoutMillis;
             long remaining = deadline - System.currentTimeMillis();
             //wait-path
@@ -51,7 +52,6 @@ public class ConcurrencyManager extends ILockManagerGrpc.ILockManagerImplBase {
                     waitingRequests.await(remaining, TimeUnit.MILLISECONDS);
                 } catch (InterruptedException e) {
                     responseObserver.onError(e);
-                    responseObserver.onCompleted();
                     return;
                 }
                 if (tryToObtainLocks(req.getElementsList())) {
@@ -62,7 +62,6 @@ public class ConcurrencyManager extends ILockManagerGrpc.ILockManagerImplBase {
                 remaining = deadline - System.currentTimeMillis();
                 if (remaining <= 0) {
                     responseObserver.onError(new TimeoutException());
-                    responseObserver.onCompleted();
                     return;
                 }
             }
@@ -104,6 +103,7 @@ public class ConcurrencyManager extends ILockManagerGrpc.ILockManagerImplBase {
 
     @Override
     public void unlock(UnlockRequest req, StreamObserver<Empty> responseObserver) {
+        System.out.println("Unlock Called for Transaction: " + req.getTid());
         lock.lock();
         try {
             List<ResourceElement> elementsToUnlock = transactionScopes.get(req.getTid());

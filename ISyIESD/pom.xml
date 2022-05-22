@@ -32,8 +32,6 @@
 	<modules>
 		<module>CesTC</module>
 		<module>CesVector</module>
-
-
 	</modules>
 
 	<build>

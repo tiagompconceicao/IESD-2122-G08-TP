@@ -1,37 +1,32 @@
 package isos.tp1.isyiesd.cesvector.servector;
 
+import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
 import transactionManagerAX.ITransactionManagerAXGrpc;
 import transactionManagerAX.Result;
 import transactionManagerAX.Transaction;
-import transactionManagerAX.Variance;
 
 
 public class TransactionManagerAX extends ITransactionManagerAXGrpc.ITransactionManagerAXImplBase {
 
-    private Vector vector;
+    private VectorEndPoint vep;
 
-    public TransactionManagerAX(Vector vector) {
-        this.vector = vector;
+    public TransactionManagerAX(VectorEndPoint vep) {
+        this.vep = vep;
     }
 
-
-    //Prepares to commit
     @Override
-    public void xaPrepare(Transaction transaction, StreamObserver<Variance> responseObserver){
-        //TODO To be implemented
+    public void xaPrepare(Transaction request, StreamObserver<Result> responseObserver) {
+        vep.prepare(request.getTid(), responseObserver);
     }
 
-
-    //Commit
     @Override
-    public void xaCommit(Transaction transaction, StreamObserver<Result> responseObserver){
-        //TODO To be implemented
+    public void xaCommit(Transaction request, StreamObserver<Empty> responseObserver) {
+        vep.commit(request.getTid(), responseObserver);
     }
 
-    //Rollback
     @Override
-    public void xaRollback(Transaction transaction, StreamObserver<Result> responseObserver){
-        //TODO To be implemented
+    public void xaRollback(Transaction request, StreamObserver<Empty> responseObserver) {
+        vep.rollback(request.getTid(), responseObserver);
     }
 }

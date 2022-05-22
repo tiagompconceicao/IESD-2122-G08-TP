@@ -27,6 +27,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>isos.tp1.isyiesd.cestc.sercoordinator</groupId>
+			<artifactId>SerCoordinatorAPIM</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>isos.tp1.isyiesd.cesvector.servector</groupId>
 			<artifactId>SerVectorAPIM</artifactId>
 			<version>0.1.0</version>
@@ -34,6 +39,11 @@
 		<dependency>
 			<groupId>isos.tp1.isyiesd.cestc.sertm</groupId>
 			<artifactId>SerTMAPIM</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>isos.tp1.isyiesd.cestc.sertplm</groupId>
+			<artifactId>SerTPLMAPIM</artifactId>
 			<version>0.1.0</version>
 		</dependency>
 		<dependency>
@@ -54,12 +64,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>isos.tp1.isyiesd.cestc.sertplm</groupId>
-			<artifactId>SerTPLMAPIM</artifactId>
-			<version>0.1.0</version>
-			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
