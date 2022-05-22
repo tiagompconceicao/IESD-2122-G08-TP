@@ -1,4 +1,4 @@
-import java.util.concurrent.locks.Condition;
+package isos.tp1.isyiesd.cestc.sertplm;
 
 public class ResourceElement {
     int serverID = 0;

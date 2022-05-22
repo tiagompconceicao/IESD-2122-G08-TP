@@ -10,6 +10,8 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
 //import javax.xml.ws.Endpoint;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -24,6 +26,7 @@ public class SiteServer {
     private static int thisPort = 9001;
     private static String coordinatorIP = "localhost";
     private static int coordinatorPort = 9000;
+    private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 
     public static void main(String[] args) {
@@ -46,16 +49,17 @@ public class SiteServer {
             ICoordinatorGrpc.ICoordinatorBlockingStub coordinatorProxy = ICoordinatorGrpc
               .newBlockingStub(coordinatorChannel);
 
+            //Regista-se no Coordinator como TM
             coordinatorProxy.registerTM(ServiceEndpoint
               .newBuilder()
               .setIp(thisIP)
               .setPort(thisPort)
               .setName("TM")
               .build());
+            System.out.println(formatter.format(new Date())+": Registered on Coordinator as TM.");
             VectorServices vs = coordinatorProxy.getVectorServices(Empty.newBuilder().build());
-
-
-            //Tem de conhecer os "nomes" e ip/port dos vectores
+            System.out.println(formatter.format(new Date())+": Obtained Vector Services Info");
+            //Tem de conhecer os Vector Services para puder comunicar (AX-proto)
             List<ServiceEndpoint> vectorEndpoints = vs.getVectorsList();
             //Transaction manager instance shared with interfaces TX and XA
             TransactionManagerV2 transactionManager = new TransactionManagerV2(vectorEndpoints);
@@ -68,7 +72,7 @@ public class SiteServer {
                     .addService(transactionManagerXA)
                     .build()
                     .start();
-            logger.info("Server started, listening on " + thisPort);
+            logger.info("TM Server started, listening on " + thisPort);
             System.err.println("*** server await termination");
             svc.awaitTermination();
         } catch (Exception e) {

@@ -26,7 +26,8 @@ public class SiteServer {
               .addService(new Coordinator(numberOfVectorServices))
               .build()
               .start();
-            logger.info("Server started, listening on " + serverPort);
+            logger.info("Coordination Server started, listening on " + serverPort + " - Expecting " +
+              numberOfVectorServices+" Vector Services");
             System.err.println("*** server await termination");
             svc.awaitTermination();
         } catch (Exception e) {
