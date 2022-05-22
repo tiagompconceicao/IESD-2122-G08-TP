@@ -1,8 +1,8 @@
 package isos.tp1.isyiesd.cestc.sertm;
 
-import ICoordinator.ICoordinatorGrpc;
-import ICoordinator.ServiceEndpoint;
-import ICoordinator.VectorServices;
+import IRegistry.IRegistryGrpc;
+import IRegistry.ServiceEndpoint;
+import IRegistry.VectorServices;
 import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -25,7 +25,7 @@ public class SiteServer {
     private static String thisIP = "localhost";
     private static int thisPort = 9001;
     private static String coordinatorIP = "localhost";
-    private static int coordinatorPort = 9000;
+    private static int coordinatorPort = 9002;
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 
@@ -46,7 +46,7 @@ public class SiteServer {
               .forAddress(coordinatorIP, coordinatorPort)
               .usePlaintext()
               .build();
-            ICoordinatorGrpc.ICoordinatorBlockingStub coordinatorProxy = ICoordinatorGrpc
+            IRegistryGrpc.IRegistryBlockingStub coordinatorProxy = IRegistryGrpc
               .newBlockingStub(coordinatorChannel);
 
             //Regista-se no Coordinator como TM

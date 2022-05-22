@@ -1,10 +1,9 @@
 package isos.tp1.isyiesd.cesvector.servectorcli;
 
-import ICoordinator.ICoordinatorGrpc;
+import IRegistry.IRegistryGrpc;
 import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import ICoordinator.ICoordinatorGrpc.ICoordinatorBlockingStub;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
@@ -15,12 +14,12 @@ import transactionManagerTX.ITransactionManagerTXGrpc;
 import transactionManagerTX.ITransactionManagerTXGrpc.ITransactionManagerTXBlockingStub;
 import vector.IVectorGrpc.IVectorBlockingStub;
 import vector.IVectorGrpc;
-import ICoordinator.ServiceEndpoint;
-import ICoordinator.VectorServices;
+import IRegistry.ServiceEndpoint;
+import IRegistry.VectorServices;
 import lockManager.ILockManagerGrpc.ILockManagerBlockingStub;
 
 public class ConnectionManager {
-    public ICoordinatorBlockingStub coordinatorProxy;
+    public IRegistryGrpc.IRegistryBlockingStub coordinatorProxy;
 
     public ITransactionManagerTXBlockingStub transactionManagerProxy;
     public ILockManagerBlockingStub lockManagerProxy;
@@ -42,7 +41,7 @@ public class ConnectionManager {
           .forAddress(ip, port)
           .usePlaintext()
           .build();
-        coordinatorProxy = ICoordinatorGrpc.newBlockingStub(coordinatorChannel);
+        coordinatorProxy = IRegistryGrpc.newBlockingStub(coordinatorChannel);
 
         ServiceEndpoint transactionManagerEP = coordinatorProxy.getTM(Empty.newBuilder().build());
         transactionManagerChannel = ManagedChannelBuilder

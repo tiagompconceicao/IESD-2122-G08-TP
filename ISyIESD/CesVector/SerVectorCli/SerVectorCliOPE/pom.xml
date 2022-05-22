@@ -65,7 +65,13 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>isos.tp1.isyiesd.cesregistry.serregistry</groupId>
+            <artifactId>SerRegistryAPIM</artifactId>
+            <version>0.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

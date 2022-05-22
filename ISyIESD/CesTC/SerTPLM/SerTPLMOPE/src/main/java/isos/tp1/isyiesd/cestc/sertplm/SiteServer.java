@@ -1,7 +1,7 @@
 package isos.tp1.isyiesd.cestc.sertplm;
 
-import ICoordinator.ICoordinatorGrpc;
-import ICoordinator.ServiceEndpoint;
+import IRegistry.IRegistryGrpc;
+import IRegistry.ServiceEndpoint;
 import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -18,9 +18,9 @@ public class SiteServer {
 
     public static final Logger logger = Logger.getLogger(SiteServer.class.getName());
     private static String thisIP = "localhost";
-    private static int thisPort = 9002;
+    private static int thisPort = 9004;
     private static String coordinatorIP = "localhost";
-    private static int coordinatorPort = 9000;
+    private static int coordinatorPort = 9002;
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     public static void main(String[] args) {
@@ -41,7 +41,7 @@ public class SiteServer {
               .forAddress(coordinatorIP, coordinatorPort)
               .usePlaintext()
               .build();
-            ICoordinatorGrpc.ICoordinatorBlockingStub coordinatorProxy = ICoordinatorGrpc
+            IRegistryGrpc.IRegistryBlockingStub coordinatorProxy = IRegistryGrpc
               .newBlockingStub(coordinatorChannel);
 
             //regista-se no coordenador como TPLM (Concurrency Manager)

@@ -1,7 +1,7 @@
 package isos.tp1.isyiesd.cesvector.servector;
 
-import ICoordinator.ICoordinatorGrpc;
-import ICoordinator.ServiceEndpoint;
+import IRegistry.IRegistryGrpc;
+import IRegistry.ServiceEndpoint;
 import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -22,9 +22,9 @@ public class SiteServer {
     private static String thisIP = "localhost";
     private static int thisPort = 9003;
     private static String coordinatorIP = "localhost";
-    private static int coordinatorPort = 9000;
+    private static int coordinatorPort = 9002;
     //name of this Vector Service
-    private static String vectorServiceName = "VectorService_1";
+    private static String vectorServiceName = "VectorService_2";
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     public static void main(String[] args) {
@@ -49,7 +49,7 @@ public class SiteServer {
               .forAddress(coordinatorIP, coordinatorPort)
               .usePlaintext()
               .build();
-            ICoordinatorGrpc.ICoordinatorBlockingStub coordinatorProxy = ICoordinatorGrpc
+            IRegistryGrpc.IRegistryBlockingStub coordinatorProxy = IRegistryGrpc
               .newBlockingStub(coordinatorChannel);
 
             //regista-se no coordenador como VectorService

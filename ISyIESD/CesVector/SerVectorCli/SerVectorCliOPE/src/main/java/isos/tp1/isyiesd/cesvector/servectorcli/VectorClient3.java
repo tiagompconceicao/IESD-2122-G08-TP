@@ -16,7 +16,7 @@ public class VectorClient3 {
     private static final int WRITE_MODE = 2;
 
     private static String coordinatorIP = "localhost";
-    private static int coordinatorPort = 9000;
+    private static int coordinatorPort = 9002;
 
     private static final Logger logger = Logger.getLogger(VectorClient3.class.getName());
 
@@ -30,7 +30,7 @@ public class VectorClient3 {
         Transaction transaction = null;
         try {
             ConnectionManager cm = new ConnectionManager(coordinatorIP, coordinatorPort, logger);
-            ICoordinator.Result result = cm.coordinatorProxy.checkInvariant(Empty.newBuilder().build());
+            IRegistry.Result result = cm.coordinatorProxy.checkInvariant(Empty.newBuilder().build());
             if(result.getStatus()) {
                 logger.info("Invariant is Valid!");
             } else {
@@ -63,14 +63,14 @@ public class VectorClient3 {
             res = y - x;
             logger.info("Transaction: " + transaction.getTid() + " || " + "Read value: " + y + " from VectorService_1, index: 0");
 
-            Thread.sleep(10000);
+            Thread.sleep(3000);
 
             //equivalent to port.write(0, res);
             cm.vectorServices.get("VectorService_1")
               .write(WriteMessage.newBuilder().setTid(transaction.getTid()).setPos(0).setValue(res).build());
             logger.info("Transaction: " + transaction.getTid() + " || " + "Wrote value: " + res + " in VectorService_1, index: 0");
 
-            Thread.sleep(10000);
+            Thread.sleep(3000);
 
             //equivalent to port.read(2);
             v = cm.vectorServices.get("VectorService_2")

@@ -1,6 +1,6 @@
 package isos.tp1.isyiesd.cestc.sertm;
 
-import ICoordinator.ServiceEndpoint;
+import IRegistry.ServiceEndpoint;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;

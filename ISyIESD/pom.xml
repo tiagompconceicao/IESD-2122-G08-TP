@@ -30,6 +30,7 @@
     </properties>
 
 	<modules>
+		<module>CesRegistry</module>
 		<module>CesTC</module>
 		<module>CesVector</module>
 	</modules>
