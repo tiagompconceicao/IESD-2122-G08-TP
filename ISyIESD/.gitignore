@@ -5,6 +5,11 @@
 # Ignore Gradle build output directory
 build
 
+CesRegistry/SerRegistry/SerRegistryAPIM/target/
+CesRegistry/SerRegistry/SerRegistryOPE/target/
+CesTC/SerTPLM/SerTPLMAPIM/target/
+CesTC/SerTPLM/SerTPLMOPE/target/
+
 # Ignore Idea
 .idea
 *.iml
