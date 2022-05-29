@@ -16,7 +16,7 @@ public class VectorClient3 {
     private static final int WRITE_MODE = 2;
 
     private static String coordinatorIP = "localhost";
-    private static int coordinatorPort = 9002;
+    private static int coordinatorPort = 9000;
 
     private static final Logger logger = Logger.getLogger(VectorClient3.class.getName());
 

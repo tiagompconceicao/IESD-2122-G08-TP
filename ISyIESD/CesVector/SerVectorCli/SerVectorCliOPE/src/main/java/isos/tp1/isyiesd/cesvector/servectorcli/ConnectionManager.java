@@ -1,6 +1,7 @@
 package isos.tp1.isyiesd.cesvector.servectorcli;
 
 import IRegistry.IRegistryGrpc;
+import IRegistry.ServiceRequest;
 import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -43,7 +44,7 @@ public class ConnectionManager {
           .build();
         coordinatorProxy = IRegistryGrpc.newBlockingStub(coordinatorChannel);
 
-        ServiceEndpoint transactionManagerEP = coordinatorProxy.getTM(Empty.newBuilder().build());
+        ServiceEndpoint transactionManagerEP = coordinatorProxy.getService(ServiceRequest.newBuilder().setType("TM").setName("TM1").build());
         transactionManagerChannel = ManagedChannelBuilder
           .forAddress(transactionManagerEP.getIp(), transactionManagerEP.getPort())
           .usePlaintext()
@@ -61,7 +62,7 @@ public class ConnectionManager {
             vectorServiceChannels.add(vectorServiceChannel);
         }
 
-        ServiceEndpoint lockManagerEP = coordinatorProxy.getTPLM(Empty.newBuilder().build());
+        ServiceEndpoint lockManagerEP = coordinatorProxy.getService(ServiceRequest.newBuilder().setType("TPLM").setName("TPLM1").build());
         lockManagerChannel = ManagedChannelBuilder
           .forAddress(lockManagerEP.getIp(), lockManagerEP.getPort())
           .usePlaintext()

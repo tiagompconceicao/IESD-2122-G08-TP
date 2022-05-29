@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 public class SiteServer {
     public static final Logger logger = Logger.getLogger(SiteServer.class.getName());
-    private static int serverPort = 9002;
+    private static int serverPort = 9000;
     private static int numberOfVectorServices = 2;
 
     public static void main(String[] args) {

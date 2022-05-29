@@ -2,6 +2,7 @@ package isos.tp1.isyiesd.cesvector.servector;
 
 import IRegistry.IRegistryGrpc;
 import IRegistry.ServiceEndpoint;
+import IRegistry.ServiceRequest;
 import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -20,9 +21,9 @@ public class SiteServer {
 
     public static final Logger logger = Logger.getLogger(SiteServer.class.getName());
     private static String thisIP = "localhost";
-    private static int thisPort = 9003;
+    private static int thisPort = 9006;
     private static String coordinatorIP = "localhost";
-    private static int coordinatorPort = 9002;
+    private static int coordinatorPort = 9000;
     //name of this Vector Service
     private static String vectorServiceName = "VectorService_2";
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -53,17 +54,18 @@ public class SiteServer {
               .newBlockingStub(coordinatorChannel);
 
             //regista-se no coordenador como VectorService
-            coordinatorProxy.registerVectorService(ServiceEndpoint
+            coordinatorProxy.registerService(ServiceEndpoint
               .newBuilder()
               .setIp(thisIP)
               .setPort(thisPort)
               .setName(vectorServiceName)
+              .setType("Vector")
               .build());
             System.out.println(formatter.format(new Date())+": Registered on Coordinator as a Vector" +
               "Service.");
             System.out.println("    -Getting TM info.");
             //Obtem Info do Transaction Manager
-            ServiceEndpoint tm = coordinatorProxy.getTM(Empty.newBuilder().build());
+            ServiceEndpoint tm = coordinatorProxy.getService(ServiceRequest.newBuilder().setType("TM").setName("TM1").build());
             System.out.println(formatter.format(new Date())+": TM Info Obtained.");
 
             //inicia o Vector Service com a info de connexão do TM e o nome do Vector Service

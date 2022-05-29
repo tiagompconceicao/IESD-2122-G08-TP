@@ -18,9 +18,9 @@ public class SiteServer {
 
     public static final Logger logger = Logger.getLogger(SiteServer.class.getName());
     private static String thisIP = "localhost";
-    private static int thisPort = 9004;
+    private static int thisPort = 9002;
     private static String coordinatorIP = "localhost";
-    private static int coordinatorPort = 9002;
+    private static int coordinatorPort = 9000;
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     public static void main(String[] args) {
@@ -45,11 +45,12 @@ public class SiteServer {
               .newBlockingStub(coordinatorChannel);
 
             //regista-se no coordenador como TPLM (Concurrency Manager)
-            coordinatorProxy.registerTPLM(ServiceEndpoint
+            coordinatorProxy.registerService(ServiceEndpoint
               .newBuilder()
               .setIp(thisIP)
               .setPort(thisPort)
-              .setName("TPLM")
+              .setName("TPLM1")
+              .setType("TPLM")
               .build());
             System.out.println(formatter.format(new Date())+": Registered on Coordinator as TPLM (" +
               "Concurrency Manager).");

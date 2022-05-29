@@ -25,7 +25,7 @@ public class SiteServer {
     private static String thisIP = "localhost";
     private static int thisPort = 9001;
     private static String coordinatorIP = "localhost";
-    private static int coordinatorPort = 9002;
+    private static int coordinatorPort = 9000;
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 
@@ -43,19 +43,21 @@ public class SiteServer {
         }
         try {
             ManagedChannel coordinatorChannel = ManagedChannelBuilder
-              .forAddress(coordinatorIP, coordinatorPort)
-              .usePlaintext()
-              .build();
+                .forAddress(coordinatorIP, coordinatorPort)
+                .usePlaintext()
+                .build();
             IRegistryGrpc.IRegistryBlockingStub coordinatorProxy = IRegistryGrpc
               .newBlockingStub(coordinatorChannel);
 
             //Regista-se no Coordinator como TM
-            coordinatorProxy.registerTM(ServiceEndpoint
-              .newBuilder()
-              .setIp(thisIP)
-              .setPort(thisPort)
-              .setName("TM")
-              .build());
+            coordinatorProxy.registerService(ServiceEndpoint
+                .newBuilder()
+                .setIp(thisIP)
+                .setPort(thisPort)
+                .setName("TM1")
+                .setType("TM")
+                .build());
+
             System.out.println(formatter.format(new Date())+": Registered on Coordinator as TM.");
             VectorServices vs = coordinatorProxy.getVectorServices(Empty.newBuilder().build());
             System.out.println(formatter.format(new Date())+": Obtained Vector Services Info");
