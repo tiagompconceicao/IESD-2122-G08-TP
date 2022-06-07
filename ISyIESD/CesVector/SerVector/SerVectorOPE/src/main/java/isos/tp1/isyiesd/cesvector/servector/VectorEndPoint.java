@@ -136,7 +136,7 @@ public class VectorEndPoint {
     public int getSum() {
         int sum = 0;
         for(int val : vector) {
-            sum = sum + val;
+            sum += val;
         }
         return sum;
     }
