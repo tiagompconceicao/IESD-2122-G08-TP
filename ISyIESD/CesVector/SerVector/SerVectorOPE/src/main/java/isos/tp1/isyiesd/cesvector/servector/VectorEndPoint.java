@@ -98,8 +98,10 @@ public class VectorEndPoint {
         //obtem as operações da transação
         Transac t = transacHistory.get(tid);
         //Efectiva as alterações ao vector
-        for(Write w : t.writes) {
-            vector[w.pos] = w.newValue;
+        if(t != null) {
+            for (Write w : t.writes) {
+                vector[w.pos] = w.newValue;
+            }
         }
         System.out.println(formatter.format(new Date())+": Committed changes of Transaction: "+ tid);
         //obtem o index do registo de transações
@@ -133,11 +135,23 @@ public class VectorEndPoint {
         return -1;
     }
 
-    public int getSum() {
+    public void getSum(int tid, StreamObserver<VectorResponse> responseObserver) {
         int sum = 0;
         for(int val : vector) {
             sum += val;
         }
-        return sum;
+        System.out.println(formatter.format(new Date())+": Get Sum called for Transaction: "+ tid);
+        //verifica se a transação está no registo de transações.
+        if(getTransactionRegisterIndex(tid) == -1) {
+            //adiciona o registo da participação da transação
+            transactionsRegistry.add(new TransactionRegister(tid));
+            //regista a participação no transation Manager
+            tmProxy.xaReg(RegistryMessage.newBuilder().setTid(tid).setSender(vectorServiceName).build());
+            System.out.println(formatter.format(new Date())+": Registered Transaction "+tid+" in Transaction Manager. " +
+              "Get Sum Op.");
+        }
+        //não regista a operação de read pois é "inofenciva"
+        responseObserver.onNext(VectorResponse.newBuilder().setValue(sum).build());
+        responseObserver.onCompleted();
     }
 }

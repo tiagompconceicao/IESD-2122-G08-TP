@@ -50,46 +50,48 @@ public class TransactionManagerV2 {
         //Obtem os vector services que participam nesta transação
         LinkedList<VectorEndpointConnInfo> tRMs = transactionsRMs.get(tID);
         //Call prepare to commit on all vector services (keep result in "readyToCommit")
-        ListenableFuture<Result>[] readyToCommit = new ListenableFuture[tRMs.size()];
-        for(int i=0; i < tRMs.size(); i++) {
-            readyToCommit[i] = tRMs.get(i).serverProxy.xaPrepare(Transaction.newBuilder().setTid(tID).build());
-        }
-        //Check if all "readyToCommit" are indeed true
-        LinkedList<Integer> readyToCommitServers = new LinkedList<>();
-        //to keep check if some prepare as failed
-        boolean serverFailedToPrepare = false;
-        for(int i=0; i < tRMs.size(); i++) {
-            try {
-                if(!readyToCommit[i].get(timeout, TimeUnit.MILLISECONDS).getStatus()) {
-                    System.out.println("    -Server: "+tRMs.get(i).name +" failed to Prepare.");
-                    serverFailedToPrepare = true;
-                } else {
-                    System.out.println("    -Server: "+tRMs.get(i).name +" prepared successfully.");
-                    readyToCommitServers.add(i);
-                }
-            } catch (Exception e) {
-                responseObserver.onError(e);
+        if(tRMs != null) {
+            ListenableFuture<Result>[] readyToCommit = new ListenableFuture[tRMs.size()];
+            for (int i = 0; i < tRMs.size(); i++) {
+                readyToCommit[i] = tRMs.get(i).serverProxy.xaPrepare(Transaction.newBuilder().setTid(tID).build());
             }
-        }
-        //Se algum vector service falhou a preparar-se, dá-se rollback aqueles que deram prepare com
-        //sucesso.
-        if(serverFailedToPrepare) {
-            responseObserver.onNext(transactionManagerTX.Result.newBuilder().setStatus(false).build());
-            responseObserver.onCompleted();
-            rollBackReadyToCommit(tID, readyToCommitServers);
-            return;
-        }
-        //O prepare to commit deu-se com sucesso em todos os vector services, dá-se então o commit
-        ListenableFuture[] committed = new ListenableFuture[tRMs.size()];
-        for(int i=0; i < tRMs.size(); i++) {
-            committed[i] = tRMs.get(i).serverProxy.xaCommit(Transaction.newBuilder().setTid(tID).build());
-        }
-        //Espera-se pelas respostas de todos os commits
-        for(int i=0; i < tRMs.size(); i++) {
-            try {
-                committed[i].get(timeout, TimeUnit.MILLISECONDS);
-            } catch (Exception e) {
-                responseObserver.onError(e);
+            //Check if all "readyToCommit" are indeed true
+            LinkedList<Integer> readyToCommitServers = new LinkedList<>();
+            //to keep check if some prepare as failed
+            boolean serverFailedToPrepare = false;
+            for (int i = 0; i < tRMs.size(); i++) {
+                try {
+                    if (!readyToCommit[i].get(timeout, TimeUnit.MILLISECONDS).getStatus()) {
+                        System.out.println("    -Server: " + tRMs.get(i).name + " failed to Prepare.");
+                        serverFailedToPrepare = true;
+                    } else {
+                        System.out.println("    -Server: " + tRMs.get(i).name + " prepared successfully.");
+                        readyToCommitServers.add(i);
+                    }
+                } catch (Exception e) {
+                    responseObserver.onError(e);
+                }
+            }
+            //Se algum vector service falhou a preparar-se, dá-se rollback aqueles que deram prepare com
+            //sucesso.
+            if (serverFailedToPrepare) {
+                responseObserver.onNext(transactionManagerTX.Result.newBuilder().setStatus(false).build());
+                responseObserver.onCompleted();
+                rollBackReadyToCommit(tID, readyToCommitServers);
+                return;
+            }
+            //O prepare to commit deu-se com sucesso em todos os vector services, dá-se então o commit
+            ListenableFuture[] committed = new ListenableFuture[tRMs.size()];
+            for (int i = 0; i < tRMs.size(); i++) {
+                committed[i] = tRMs.get(i).serverProxy.xaCommit(Transaction.newBuilder().setTid(tID).build());
+            }
+            //Espera-se pelas respostas de todos os commits
+            for (int i = 0; i < tRMs.size(); i++) {
+                try {
+                    committed[i].get(timeout, TimeUnit.MILLISECONDS);
+                } catch (Exception e) {
+                    responseObserver.onError(e);
+                }
             }
         }
         responseObserver.onNext(transactionManagerTX.Result.newBuilder().setStatus(true).build());
@@ -123,17 +125,19 @@ public class TransactionManagerV2 {
         System.out.println(formatter.format(new Date())+": RollBack Called for Transaction: " + tID);
         //Obtem os vector services que participam nesta transação
         LinkedList<VectorEndpointConnInfo> tRMs = transactionsRMs.get(tID);
-        ListenableFuture[] rolledBack = new ListenableFuture[tRMs.size()];
-        //Manda dar Rollback a todos os vector services que participaram na transação
-        for(int i=0; i < tRMs.size(); i++) {
-            rolledBack[i] = tRMs.get(i).serverProxy.xaRollback(Transaction.newBuilder().setTid(tID).build());
-        }
-        //Espera pela resposta dos vector services ao rollback
-        for(int i=0; i < tRMs.size(); i++) {
-            try {
-                rolledBack[i].get(timeout, TimeUnit.MILLISECONDS);
-            } catch (Exception e) {
-                responseObserver.onError(e);
+        if(tRMs != null) {
+            ListenableFuture[] rolledBack = new ListenableFuture[tRMs.size()];
+            //Manda dar Rollback a todos os vector services que participaram na transação
+            for (int i = 0; i < tRMs.size(); i++) {
+                rolledBack[i] = tRMs.get(i).serverProxy.xaRollback(Transaction.newBuilder().setTid(tID).build());
+            }
+            //Espera pela resposta dos vector services ao rollback
+            for (int i = 0; i < tRMs.size(); i++) {
+                try {
+                    rolledBack[i].get(timeout, TimeUnit.MILLISECONDS);
+                } catch (Exception e) {
+                    responseObserver.onError(e);
+                }
             }
         }
         responseObserver.onNext(Empty.newBuilder().build());

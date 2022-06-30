@@ -7,7 +7,6 @@ import IRegistry.Number;
 import IRegistry.ServiceRequest;
 import IRegistry.VectorServices;
 import com.google.protobuf.Empty;
-import getSum.ICheckSumGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -186,8 +185,6 @@ public class Registry extends IRegistryGrpc.IRegistryImplBase {
         }
     }
 
-
-
     @Override
     public void getNumberOfVectorServices(Empty request, StreamObserver<Number> responseObserver) {
         synchronized (lock) {
@@ -197,34 +194,4 @@ public class Registry extends IRegistryGrpc.IRegistryImplBase {
         }
     }
 
-    @Override
-    public void checkInvariant(Empty request, StreamObserver<Result> responseObserver) {
-        synchronized (lock) {
-            System.out.println(formatter.format(new Date())+": Check Invariant of Vector Services " +
-              "requested.");
-            int sum = 0;
-            for (ServiceEndpoint sep : services.get(VECTOR_SERVICES)) {
-                ManagedChannel sepMC = ManagedChannelBuilder
-                  .forAddress(sep.getIp(), sep.getPort())
-                  .usePlaintext()
-                  .build();
-                ICheckSumGrpc.ICheckSumBlockingStub sepProxy = ICheckSumGrpc.newBlockingStub(sepMC);
-                int sumOfVector = sepProxy.getSum(Empty.newBuilder().build()).getValue();
-                System.out.println("    -Sum of Vector Service: "+sep.getName()+" is: "+sumOfVector);
-                sum = sum + sumOfVector;
-            }
-            //sum of starting values in vector services
-            int vectorSum = 300 + 234 + 56 + 789;
-            if(sum == numberOfVectorServices* vectorSum) {
-                System.out.println(formatter.format(new Date())+": Check Invariant of Vector Services " +
-                  "is valid.");
-                responseObserver.onNext(Result.newBuilder().setStatus(true).build());
-            } else {
-                System.out.println(formatter.format(new Date())+": Check Invariant of Vector Services " +
-                  "is not valid.");
-                responseObserver.onNext(Result.newBuilder().setStatus(false).build());
-            }
-            responseObserver.onCompleted();
-        }
-    }
 }

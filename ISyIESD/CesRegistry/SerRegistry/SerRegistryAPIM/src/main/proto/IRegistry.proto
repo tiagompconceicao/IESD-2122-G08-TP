@@ -9,7 +9,6 @@ service IRegistry {
   rpc getVectorServices(google.protobuf.Empty) returns (VectorServices);
 
   rpc getNumberOfVectorServices(google.protobuf.Empty) returns (Number);
-  rpc checkInvariant(google.protobuf.Empty) returns(Result);
 
   rpc getService(ServiceRequest) returns (ServiceEndpoint);
   rpc registerService(ServiceEndpoint) returns (google.protobuf.Empty);

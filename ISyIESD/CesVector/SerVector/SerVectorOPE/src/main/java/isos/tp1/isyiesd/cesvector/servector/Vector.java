@@ -3,6 +3,7 @@ package isos.tp1.isyiesd.cesvector.servector;
 import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 import io.grpc.stub.StreamObserver;
 import transactionManagerXA.ITransactionManagerXAGrpc;
 import transactionManagerXA.RegistryMessage;
@@ -76,4 +77,8 @@ public class Vector extends IVectorGrpc.IVectorImplBase{
 //        }
 //        return sum;
 //    }
+    @Override
+    public void checkSum(ReadMessage request, StreamObserver<VectorResponse> responseObserver) {
+        vep.getSum(request.getTid(), responseObserver);
+    }
 }

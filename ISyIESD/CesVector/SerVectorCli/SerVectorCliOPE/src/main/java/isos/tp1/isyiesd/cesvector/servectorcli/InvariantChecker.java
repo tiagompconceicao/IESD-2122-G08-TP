@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import getSum.ICheckSumGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import lockManager.LockRequest;
@@ -16,6 +15,7 @@ import lockManager.ResourceElement;
 import lockManager.UnlockRequest;
 import transactionManagerTX.Result;
 import transactionManagerTX.Transaction;
+import vector.IVectorGrpc;
 import vector.ReadMessage;
 import vector.WriteMessage;
 
@@ -70,8 +70,8 @@ public class InvariantChecker {
                         .forAddress(sep.getIp(), sep.getPort())
                         .usePlaintext()
                         .build();
-                ICheckSumGrpc.ICheckSumBlockingStub sepProxy = ICheckSumGrpc.newBlockingStub(sepMC);
-                int sumOfVector = sepProxy.getSum(Empty.newBuilder().build()).getValue();
+                IVectorGrpc.IVectorBlockingStub sepProxy = IVectorGrpc.newBlockingStub(sepMC);
+                int sumOfVector = sepProxy.checkSum(ReadMessage.newBuilder().setTid(tid).build()).getValue();
                 System.out.println("    -Sum of Vector Service: "+sep.getName()+" is: "+sumOfVector);
                 sum = sum + sumOfVector;
             }

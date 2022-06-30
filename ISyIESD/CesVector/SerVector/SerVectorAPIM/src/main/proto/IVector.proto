@@ -8,6 +8,7 @@ package forum;
 service IVector {
   rpc read(ReadMessage) returns (VectorResponse);
   rpc write(WriteMessage) returns (google.protobuf.Empty);
+  rpc checkSum(ReadMessage) returns (VectorResponse);
 }
 
 message ReadMessage {

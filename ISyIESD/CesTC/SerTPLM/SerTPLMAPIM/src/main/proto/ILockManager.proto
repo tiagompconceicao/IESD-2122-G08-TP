@@ -6,8 +6,13 @@ option java_package = "lockManager";
 package forum;
 
 service ILockManager {
-  rpc getLocks(LockRequest) returns (google.protobuf.Empty);
+  rpc getLocks(LockRequest) returns (Response);
+  rpc abortRequest(LockRequest) returns (google.protobuf.Empty);
   rpc unlock(UnlockRequest) returns (google.protobuf.Empty);
+}
+
+message Response {
+  bool status = 1;
 }
 
 message UnlockRequest {

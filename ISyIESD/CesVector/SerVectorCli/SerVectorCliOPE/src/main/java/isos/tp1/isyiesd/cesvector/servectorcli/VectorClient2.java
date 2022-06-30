@@ -115,12 +115,12 @@ public class VectorClient2 {
 
         ths.forEach(VectorClient2::uninterruptibleJoin);
         logger.info("New threads ended, finishing test");
-        IRegistry.Result r = cm.coordinatorProxy.checkInvariant(Empty.newBuilder().build());
+        /*IRegistry.Result r = cm.coordinatorProxy.checkInvariant(Empty.newBuilder().build());
         if(r.getStatus()) {
             logger.info("Invariant is Valid!");
         } else {
             logger.info("Invariant is Not Valid!");
-        }
+        }*/
         cm.shutdown();
     }
 

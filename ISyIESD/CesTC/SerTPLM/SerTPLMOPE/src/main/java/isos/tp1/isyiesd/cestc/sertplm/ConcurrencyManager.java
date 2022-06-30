@@ -1,12 +1,14 @@
 package isos.tp1.isyiesd.cestc.sertplm;
 
 import com.google.protobuf.Empty;
+import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 import io.grpc.stub.StreamObserver;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import lockManager.ILockManagerGrpc;
 import lockManager.LockRequest;
 import lockManager.ResourceElement;
+import lockManager.Response;
 import lockManager.UnlockRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +26,8 @@ public class ConcurrencyManager extends ILockManagerGrpc.ILockManagerImplBase {
     private final Condition waitingRequests = lock.newCondition();
     //mapa entre T-id e os Logic Locks que precisam
     private final HashMap<Integer, List<ResourceElement>> transactionScopes = new HashMap<>();
+    //Registo das referencias "responseObserver"
+    private final HashMap<Integer, StreamObserver<Response>> lockRequests = new HashMap<>();
     private final SimpleDateFormat formatter;
     //espera que uma transação faz para obter as locks que neccessita
     private final int timeoutMillisLocks = 120000;
@@ -42,16 +46,18 @@ public class ConcurrencyManager extends ILockManagerGrpc.ILockManagerImplBase {
 
     //lockType_1 = read, lockType_2 = write
     @Override
-    public void getLocks(LockRequest req, StreamObserver<Empty> responseObserver) {
-        System.out.println(formatter.format(new Date())+": Set of Locks required for Transaction: " + req.getTid());
+    public void getLocks(LockRequest req, StreamObserver<Response> responseObserver) {
         lock.lock();
         try{
+            System.out.println(formatter.format(new Date())+": Set of Locks required for Transaction: " + req.getTid());
+            lockRequests.put(req.getTid(), responseObserver);
             //põe a info das lock que esta transacção precisa
             transactionScopes.put(req.getTid(), req.getElementsList());
             //fast-path
             if(tryToObtainLocks(req.getElementsList())) {
-                System.out.println(formatter.format(new Date())+": Set of Locks given to Transaction: " + req.getTid());
-                responseObserver.onNext(Empty.newBuilder().build());
+                lockRequests.remove(req.getTid());
+                System.out.println(formatter.format(new Date())+": Locks Obtained for Transaction: " + req.getTid());
+                responseObserver.onNext(Response.newBuilder().setStatus(true).build());
                 responseObserver.onCompleted();
                 return;
             }
@@ -62,17 +68,23 @@ public class ConcurrencyManager extends ILockManagerGrpc.ILockManagerImplBase {
                 try {
                     waitingRequests.await(remaining, TimeUnit.MILLISECONDS);
                 } catch (InterruptedException e) {
+                    lockRequests.remove(req.getTid());
                     responseObserver.onError(e);
                     return;
                 }
+                if(lockRequests.get(req.getTid()) == null) {
+                    return;
+                }
                 if (tryToObtainLocks(req.getElementsList())) {
-                    System.out.println(formatter.format(new Date())+": Set of Locks given to Transaction: " + req.getTid());
-                    responseObserver.onNext(Empty.newBuilder().build());
+                    lockRequests.remove(req.getTid());
+                    System.out.println(formatter.format(new Date())+": Locks Obtained for Transaction: " + req.getTid());
+                    responseObserver.onNext(Response.newBuilder().setStatus(true).build());
                     responseObserver.onCompleted();
                     return;
                 }
                 remaining = deadline - System.currentTimeMillis();
                 if (remaining <= 0) {
+                    lockRequests.remove(req.getTid());
                     responseObserver.onError(new TimeoutException());
                     System.out.println(formatter.format(new Date())+": Lock Request Timed out for Transaction: " + req.getTid());
                     return;
@@ -121,24 +133,52 @@ public class ConcurrencyManager extends ILockManagerGrpc.ILockManagerImplBase {
         }
     }
 
-    @Override
-    public void unlock(UnlockRequest req, StreamObserver<Empty> responseObserver) {
-        lock.lock();
-        try {
-            //obtem as locks desta transação
-            List<ResourceElement> elementsToUnlock = transactionScopes.get(req.getTid());
+    private void releaseLocks(int tid) {
+        //obtem as locks desta transação
+        List<ResourceElement> elementsToUnlock = transactionScopes.get(tid);
+        if(elementsToUnlock != null) {
             for (ResourceElement le : elementsToUnlock) {
                 LockElement lockElement = elementLockResources[le.getServerID()][le.getElementIndex()];
                 lockElement.isReadLockAvailable = true;
                 lockElement.isWriteLockAvailable = true;
             }
-            transactionScopes.remove(req.getTid());
+            transactionScopes.remove(tid);
             //sinaliza pedidos de obtenção de locks à espera para obter.
+        }
+        waitingRequests.signalAll();
+
+        System.out.println(formatter.format(new Date())+": Released locks of Transaction: " +
+          tid);
+    }
+
+    @Override
+    public void unlock(UnlockRequest req, StreamObserver<Empty> responseObserver) {
+        lock.lock();
+        try {
+            releaseLocks(req.getTid());
+
+            responseObserver.onNext(Empty.newBuilder().build());
+            responseObserver.onCompleted();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public void abortRequest(LockRequest request, StreamObserver<Empty> responseObserver) {
+        lock.lock();
+        try {
+            System.out.println(formatter.format(new Date())+": Aborted lock request for Transaction: " +
+              request.getTid());
+            StreamObserver<Response> ro  =  lockRequests.remove(request.getTid());
+            if(ro != null) {
+                ro.onNext(Response.newBuilder().setStatus(false).build());
+                ro.onCompleted();
+            } else {
+                //release locks
+                releaseLocks(request.getTid());
+            }
             waitingRequests.signalAll();
-
-            System.out.println(formatter.format(new Date())+": Unlocked locks of Transaction: " +
-              req.getTid());
-
             responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } finally {

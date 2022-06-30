@@ -18,12 +18,14 @@ import vector.IVectorGrpc;
 import IRegistry.ServiceEndpoint;
 import IRegistry.VectorServices;
 import lockManager.ILockManagerGrpc.ILockManagerBlockingStub;
+import lockManager.ILockManagerGrpc.ILockManagerStub;
 
 public class ConnectionManager {
     public IRegistryGrpc.IRegistryBlockingStub coordinatorProxy;
 
     public ITransactionManagerTXBlockingStub transactionManagerProxy;
     public ILockManagerBlockingStub lockManagerProxy;
+    public ILockManagerStub lockManagerProxyAsync;
     public HashMap<String, IVectorBlockingStub> vectorServices;
 
     private final ManagedChannel coordinatorChannel;
@@ -68,6 +70,7 @@ public class ConnectionManager {
           .usePlaintext()
           .build();
         lockManagerProxy = ILockManagerGrpc.newBlockingStub(lockManagerChannel);
+        lockManagerProxyAsync = ILockManagerGrpc.newStub(lockManagerChannel);
     }
 
     private static void close(ManagedChannel mc, String server) throws InterruptedException {

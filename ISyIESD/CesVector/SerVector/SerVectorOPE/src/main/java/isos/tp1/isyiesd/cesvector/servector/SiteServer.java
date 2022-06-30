@@ -74,14 +74,11 @@ public class SiteServer {
             TransactionManagerAX transactionManagerService = new TransactionManagerAX(vectorEP);
             //inicia o serviço Vector
             Vector vectorService = new Vector(vectorEP);
-            //incia o serviço CheckSum
-            CheckSum cs = new CheckSum(vectorEP);
 
             //Launching server
             final Server svc = ServerBuilder.forPort(thisPort)
                     .addService(vectorService)
                     .addService(transactionManagerService)
-                    .addService(cs)
                     .build()
                     .start();
             logger.info("Vector Service Server started, listening on " + thisPort);

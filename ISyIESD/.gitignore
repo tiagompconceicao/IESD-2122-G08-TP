@@ -11,7 +11,6 @@ CesTC/SerTPLM/SerTPLMAPIM/target/
 CesTC/SerTPLM/SerTPLMOPE/target/
 
 # Ignore Idea
-.idea
 *.iml
 
 # Ignore Eclipse
