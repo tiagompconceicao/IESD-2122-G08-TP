@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="SerTPLMOPE" />
+        <module name="SerQuarkusOPE" />
         <module name="SerTMAPIM" />
         <module name="SerVectorOPE" />
         <module name="SerRegistryAPIM" />

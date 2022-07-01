@@ -33,6 +33,9 @@
 		<module>CesRegistry</module>
 		<module>CesTC</module>
 		<module>CesVector</module>
+        <module>CesQuarkus</module>
+		<module>SerQuarkus</module>
+		<module>SerQuarkusOPE</module>
 	</modules>
 
 	<build>
