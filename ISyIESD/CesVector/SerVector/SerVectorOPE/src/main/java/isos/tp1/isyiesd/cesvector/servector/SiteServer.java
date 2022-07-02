@@ -21,15 +21,17 @@ public class SiteServer {
 
     public static final Logger logger = Logger.getLogger(SiteServer.class.getName());
     private static String thisIP = "localhost";
-    private static int thisPort = 9006;
+    private static int thisPort = 9003;
     private static String coordinatorIP = "localhost";
     private static int coordinatorPort = 9000;
     //name of this Vector Service
-    private static String vectorServiceName = "VectorService_2";
+    private static String vectorServiceName = "VectorService_1";
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     public static void main(String[] args) {
-        if (args.length == 2) {
+        if (args.length == 1) {
+            vectorServiceName = args[0];
+        } else if (args.length == 2) {
             vectorServiceName = args[0];
             thisPort = Integer.parseInt(args[1]);
         } else if (args.length == 3) {

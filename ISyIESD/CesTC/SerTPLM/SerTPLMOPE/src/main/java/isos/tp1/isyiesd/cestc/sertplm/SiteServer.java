@@ -32,8 +32,8 @@ public class SiteServer {
         } else if (args.length == 4) {
             thisIP = args[0];
             thisPort = Integer.parseInt(args[1]);
-            coordinatorIP = args[0];
-            coordinatorPort = Integer.parseInt(args[1]);
+            coordinatorIP = args[2];
+            coordinatorPort = Integer.parseInt(args[3]);
         }
         try {
             //cria conexão ao coordenador

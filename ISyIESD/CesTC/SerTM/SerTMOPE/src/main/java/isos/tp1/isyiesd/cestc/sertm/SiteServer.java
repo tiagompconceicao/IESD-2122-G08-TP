@@ -31,15 +31,15 @@ public class SiteServer {
 
     public static void main(String[] args) {
         if (args.length == 1) {
-            thisPort = Integer.parseInt(args[0]);
+            coordinatorIP = args[0];
         } else if (args.length == 2) {
-            thisIP = args[0];
-            thisPort = Integer.parseInt(args[1]);
-        } else if (args.length == 4) {
-            thisIP = args[0];
-            thisPort = Integer.parseInt(args[1]);
             coordinatorIP = args[0];
             coordinatorPort = Integer.parseInt(args[1]);
+        } else if (args.length == 4) {
+            coordinatorIP = args[0];
+            coordinatorPort = Integer.parseInt(args[1]);
+            thisIP = args[2];
+            thisPort = Integer.parseInt(args[3]);
         }
         try {
             ManagedChannel coordinatorChannel = ManagedChannelBuilder

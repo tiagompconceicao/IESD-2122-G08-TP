@@ -67,6 +67,14 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <archive>
+                        <manifest>
+
+                            <!-- give full qualified name of your main class-->
+                            <mainClass>isos.tp1.isyiesd.cesvector.servector.SiteServer</mainClass>
+
+                        </manifest>
+                    </archive>
 
                 </configuration>
                 <executions>

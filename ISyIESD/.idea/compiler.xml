@@ -7,7 +7,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="SerTPLMOPE" />
-        <module name="SerQuarkusOPE" />
         <module name="SerTMAPIM" />
         <module name="SerVectorOPE" />
         <module name="SerRegistryAPIM" />
@@ -19,9 +18,12 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="CesQuarkus" target="1.8" />
       <module name="SerCoordinator" target="1.8" />
       <module name="SerCoordinatorAPIM" target="1.8" />
       <module name="SerCoordinatorOPE" target="1.8" />
+      <module name="SerQuarkus" target="1.8" />
+      <module name="SerQuarkusOPE" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
