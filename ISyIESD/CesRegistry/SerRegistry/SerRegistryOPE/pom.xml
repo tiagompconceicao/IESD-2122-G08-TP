@@ -70,6 +70,14 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <archive>
+                        <manifest>
+
+                            <!-- give full qualified name of your main class-->
+                            <mainClass>isos.tp1.isyiesd.cesregistry.serregistry.SiteServer</mainClass>
+
+                        </manifest>
+                    </archive>
 
                 </configuration>
                 <executions>
