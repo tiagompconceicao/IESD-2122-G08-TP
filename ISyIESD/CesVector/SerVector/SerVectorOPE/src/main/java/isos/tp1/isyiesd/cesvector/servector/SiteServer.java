@@ -10,6 +10,10 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
 //import javax.xml.ws.Endpoint;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
@@ -19,11 +23,12 @@ import java.util.logging.Logger;
  */
 public class SiteServer {
 
+    private static final String SERVICE_VAR_NAME = "REGISTRY_SERVICE_SERVICE_HOST";
     public static final Logger logger = Logger.getLogger(SiteServer.class.getName());
     private static String thisIP = "localhost";
     private static int thisPort = 9003;
     private static String coordinatorIP = "localhost";
-    private static int coordinatorPort = 9000;
+    private static final int coordinatorPort = 9000;
     //name of this Vector Service
     private static String vectorServiceName = "VectorService_1";
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -36,17 +41,21 @@ public class SiteServer {
             thisPort = Integer.parseInt(args[1]);
         } else if (args.length == 3) {
             vectorServiceName = args[0];
-            thisIP = args[1];
-            thisPort = Integer.parseInt(args[2]);
-        } else if (args.length == 5) {
-            vectorServiceName = args[0];
-            thisIP = args[1];
-            thisPort = Integer.parseInt(args[2]);
-            coordinatorIP = args[3];
-            coordinatorPort = Integer.parseInt(args[4]);
+            thisPort = Integer.parseInt(args[1]);
+            coordinatorIP = args[2];
+
+        }
+
+        String envVarIP = System.getenv(SERVICE_VAR_NAME);
+        if (envVarIP != null){
+            coordinatorIP = envVarIP;
         }
 
         try {
+            thisIP = getOwnIp();
+            logger.info("Going to connect to: " + coordinatorIP);
+            logger.info("Going to register service with IP: " + thisIP);
+
             //connecção ao coordenador
             ManagedChannel coordinatorChannel = ManagedChannelBuilder
               .forAddress(coordinatorIP, coordinatorPort)
@@ -90,6 +99,17 @@ public class SiteServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static String getOwnIp(){
+        DatagramSocket socket = null;
+        try {
+            socket = new DatagramSocket();
+            socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+        } catch (SocketException | UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+        return socket.getLocalAddress().getHostAddress();
     }
 
 }

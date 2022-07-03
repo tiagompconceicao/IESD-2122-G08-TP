@@ -1,6 +1,10 @@
 package isos.tp1.isyiesd.cesvector.servectorcli;
 
 import com.google.protobuf.Empty;
+
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lockManager.LockRequest;
@@ -10,6 +14,8 @@ import transactionManagerTX.Result;
 import transactionManagerTX.Transaction;
 import vector.ReadMessage;
 import vector.WriteMessage;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 public class VectorClientAsync {
     private static final int READ_MODE = 1;

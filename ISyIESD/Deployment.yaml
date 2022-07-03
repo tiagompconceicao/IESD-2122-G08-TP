@@ -1,0 +1,76 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registry-service
+spec:
+  selector:
+    app.kubernetes.io/name: registry
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9000
+      targetPort: 9000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: registry
+      app.kubernetes.io/version: "1.0"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: registry
+        app.kubernetes.io/version: "1.0"
+    spec:
+      containers:
+        - name: registry
+          image: tiago47611/registry
+          ports:
+            - containerPort: 9000
+              protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tm
+  labels:
+    app: tm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tm
+  template:
+    metadata:
+      labels:
+        app: tm
+    spec:
+      containers:
+        - name: tm
+          image: tiago47611/tm
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tplm
+  labels:
+    app: tplm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tplm
+  template:
+    metadata:
+      labels:
+        app: tplm
+    spec:
+      containers:
+        - name: tplm
+          image: tiago47611/tplm
