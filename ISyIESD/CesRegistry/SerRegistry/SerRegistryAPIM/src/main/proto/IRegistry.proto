@@ -11,7 +11,7 @@ service IRegistry {
   rpc getNumberOfVectorServices(google.protobuf.Empty) returns (Number);
 
   rpc getService(ServiceRequest) returns (ServiceEndpoint);
-  rpc registerService(ServiceEndpoint) returns (google.protobuf.Empty);
+  rpc registerService(ServiceEndpoint) returns (RegisterResult);
 }
 
 message Result {
@@ -21,6 +21,10 @@ message Result {
 message ServiceRequest {
   string name = 1;
   string type = 2;
+}
+
+message RegisterResult{
+  string name = 1;
 }
 
 message ServiceEndpoint {

@@ -24,7 +24,7 @@ public class SiteServer {
     public static final Logger logger = Logger.getLogger(SiteServer.class.getName());
     private static String thisIP = "localhost";
     private static final int thisPort = 9002;
-    private static String coordinatorIP = "localhost";
+    private static String coordinatorIP = "172.21.83.158";
     private static final int coordinatorPort = 9000;
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
@@ -56,7 +56,6 @@ public class SiteServer {
               .newBuilder()
               .setIp(thisIP)
               .setPort(thisPort)
-              .setName("TPLM1")
               .setType("TPLM")
               .build());
             System.out.println(formatter.format(new Date())+": Registered on Coordinator as TPLM (" +

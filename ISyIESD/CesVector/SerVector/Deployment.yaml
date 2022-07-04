@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vector-service
+spec:
+  selector:
+    app: vector
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9004
+      nodePort: 30965
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vector
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vector
+      app.kubernetes.io/version: "1.0"
+  template:
+    metadata:
+      labels:
+        app: vector
+        app.kubernetes.io/version: "1.0"
+    spec:
+      containers:
+        - name: vector
+          image: tiago47611/vector
+          ports:
+            - containerPort: 9004
+              protocol: TCP

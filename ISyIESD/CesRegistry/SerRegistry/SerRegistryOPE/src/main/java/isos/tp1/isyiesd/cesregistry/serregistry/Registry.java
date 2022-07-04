@@ -1,33 +1,25 @@
 package isos.tp1.isyiesd.cesregistry.serregistry;
 
 import IRegistry.IRegistryGrpc;
-import IRegistry.Result;
+import IRegistry.RegisterResult;
 import IRegistry.ServiceEndpoint;
 import IRegistry.Number;
 import IRegistry.ServiceRequest;
 import IRegistry.VectorServices;
 import com.google.protobuf.Empty;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.Stream;
 
 public class Registry extends IRegistryGrpc.IRegistryImplBase {
-    //info do TM
-    private ServiceEndpoint tm = null;
-    //info do TPLM
-    private ServiceEndpoint tplm = null;
-
     private String VECTOR_SERVICES = "Vector";
 
     //info dos Vector Services
-    private final LinkedList<ServiceEndpoint> vectorServices = new LinkedList<>();
-    private final ConcurrentHashMap<String,LinkedList<ServiceEndpoint>> services = new ConcurrentHashMap();
+    private final ConcurrentHashMap<String,ServiceEndpoint> services = new ConcurrentHashMap();
+    private int vectorID = 1;
     private final Object lock = new Object();
     //expected number of vector services
     private final int numberOfVectorServices;
@@ -46,31 +38,39 @@ public class Registry extends IRegistryGrpc.IRegistryImplBase {
         System.out.println(formatter.format(new Date())+": Coordinator Initiated.");
     }
 
+
+    //TODO: HashMap<Nome,ServiceEndpoint>
+    //Corrigir lógica
+    //Sempre substituição ou criação de entradas no hashmap (não existem replicas)
     @Override
-    public void registerService(ServiceEndpoint serviceEndpoint, StreamObserver<Empty> responseObserver){
+    public void registerService(ServiceEndpoint serviceEndpoint, StreamObserver<RegisterResult> responseObserver){
         synchronized (lock){
             //Verify if endpoint type exists
-            if (services.containsKey(serviceEndpoint.getType())) {
-                //Verify if service is already registered
-                if (getServiceByName(serviceEndpoint.getType(),serviceEndpoint.getName()) != null){
-                    responseObserver.onError(new Throwable("Service already exists"));
-                    return;
-                }
-                services.get(serviceEndpoint.getType()).push(serviceEndpoint);
-                if (serviceEndpoint.getType().equals(VECTOR_SERVICES)){
-                    currentNumberOfVectorServices++;
-                }
-
-            } else {
+            if (!services.containsKey(serviceEndpoint.getType())) {
                 services.put(serviceEndpoint.getType(),new LinkedList<>());
+            }
+            if (serviceEndpoint.getName().isEmpty()){
+                //Vector
+                ServiceEndpoint newEndpoint = ServiceEndpoint.newBuilder()
+                        .setType(serviceEndpoint.getType())
+                        .setName(serviceEndpoint.getType()+vectorID)
+                        .setIp(serviceEndpoint.getIp())
+                        .setPort(serviceEndpoint.getPort()).build();
+                services.get(serviceEndpoint.getType()).push(newEndpoint);
+                vectorID++;
+            } else {
+                //TM ou TPLM
+                services.get(serviceEndpoint.getType()).clear();
                 services.get(serviceEndpoint.getType()).push(serviceEndpoint);
-                if (serviceEndpoint.getType().equals(VECTOR_SERVICES)){
-                    currentNumberOfVectorServices++;
-                }
             }
 
+            if (serviceEndpoint.getType().equals(VECTOR_SERVICES)){
+                currentNumberOfVectorServices++;
+            }
+
+            String serviceName = serviceEndpoint.getType() + services.get(serviceEndpoint.getType()).size();
             lock.notifyAll();
-            responseObserver.onNext(Empty.newBuilder().build());
+            responseObserver.onNext(RegisterResult.newBuilder().setName(serviceName).build());
             responseObserver.onCompleted();
         }
     }

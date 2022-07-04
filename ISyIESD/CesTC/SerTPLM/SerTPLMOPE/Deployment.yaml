@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tm
+  name: tplm
   labels:
-    app: tm
+    app: tplm
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tm
+      app: tplm
   template:
     metadata:
       labels:
-        app: tm
+        app: tplm
     spec:
       containers:
-        - name: tm
-          image: tiago47611/tm
+        - name: tplm
+          image: tiago47611/tplm

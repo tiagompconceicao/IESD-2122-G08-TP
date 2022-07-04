@@ -1,4 +1,3 @@
----
 apiVersion: v1
 kind: Service
 metadata:
@@ -10,7 +9,36 @@ spec:
     - name: http
       protocol: TCP
       port: 9000
-      targetPort: 9000
+      nodePort: 30961
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tm-service
+spec:
+  selector:
+    app: tm
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9001
+      nodePort: 30962
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tplm-service
+spec:
+  selector:
+    app: tplm
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9002
+      nodePort: 30963
+  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -38,26 +66,6 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tm
-  labels:
-    app: tm
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: tm
-  template:
-    metadata:
-      labels:
-        app: tm
-    spec:
-      containers:
-        - name: tm
-          image: tiago47611/tm
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   name: tplm
   labels:
     app: tplm
@@ -74,3 +82,23 @@ spec:
       containers:
         - name: tplm
           image: tiago47611/tplm
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tm
+  labels:
+    app: tm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tm
+  template:
+    metadata:
+      labels:
+        app: tm
+    spec:
+      containers:
+        - name: tm
+          image: tiago47611/tm

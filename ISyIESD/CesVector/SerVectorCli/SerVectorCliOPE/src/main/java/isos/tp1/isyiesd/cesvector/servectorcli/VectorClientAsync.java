@@ -21,8 +21,8 @@ public class VectorClientAsync {
     private static final int READ_MODE = 1;
     private static final int WRITE_MODE = 2;
 
-    private static String coordinatorIP = "localhost";
-    private static int coordinatorPort = 9000;
+    private static String coordinatorIP = "172.21.83.158";
+    private static int coordinatorPort = 30961;
 
     private static final Logger logger = Logger.getLogger(VectorClientAsync.class.getName());
 
@@ -75,7 +75,7 @@ public class VectorClientAsync {
             int x = 100;
 
             //equivalent to port.read(0);
-            int y = cm.vectorServices.get("VectorService_1")
+            int y = cm.vectorServices.get("Vector1")
               .read(ReadMessage.newBuilder().setTid(transaction.getTid()).setPos(0).build()).getValue();
             res = y - x;
             logger.info("Transaction: " + transaction.getTid() + " || " + "Read value: " + y + " from VectorService_1, index: 0");
@@ -83,22 +83,22 @@ public class VectorClientAsync {
             Thread.sleep(3000);
 
             //equivalent to port.write(0, res);
-            cm.vectorServices.get("VectorService_1")
+            cm.vectorServices.get("Vector1")
               .write(WriteMessage.newBuilder().setTid(transaction.getTid()).setPos(0).setValue(res).build());
             logger.info("Transaction: " + transaction.getTid() + " || " + "Wrote value: " + res + " in VectorService_1, index: 0");
 
             Thread.sleep(3000);
 
             //equivalent to port.read(2);
-            v = cm.vectorServices.get("VectorService_2")
+            v = cm.vectorServices.get("Vector2")
               .read(ReadMessage.newBuilder().setTid(transaction.getTid()).setPos(2).build()).getValue();
             res = v + x;
             logger.info("Transaction: " + transaction.getTid() + " || " + "Read value: " + v + " from VectorService_2, index: 2");
 
-            Thread.sleep(10000);
+            Thread.sleep(3000);
 
             //equivalent to port.write(2, res);
-            cm.vectorServices.get("VectorService_2")
+            cm.vectorServices.get("Vector2")
               .write(WriteMessage.newBuilder().setTid(transaction.getTid()).setPos(2).setValue(res).build());
             logger.info("Transaction: " + transaction.getTid() + " || " + "Wrote value: " + res + " in VectorService_2, index: 2");
 

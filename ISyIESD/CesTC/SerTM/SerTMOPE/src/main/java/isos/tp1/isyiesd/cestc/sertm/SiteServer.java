@@ -62,8 +62,8 @@ public class SiteServer {
                 .newBuilder()
                 .setIp(thisIP)
                 .setPort(thisPort)
-                .setName("TM1")
                 .setType("TM")
+                .setName("TM1")
                 .build());
 
             System.out.println(formatter.format(new Date())+": Registered on Coordinator as TM.");

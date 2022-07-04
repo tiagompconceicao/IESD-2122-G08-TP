@@ -1,19 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tm
+  name: vectorcli
   labels:
-    app: tm
+    app: vectorcli
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tm
+      app: vectorcli
   template:
     metadata:
       labels:
-        app: tm
+        app: vectorcli
     spec:
       containers:
-        - name: tm
-          image: tiago47611/tm
+        - name: vectorcli
+          image: tiago47611/vectorcli
+          args: ["Vector1"]
