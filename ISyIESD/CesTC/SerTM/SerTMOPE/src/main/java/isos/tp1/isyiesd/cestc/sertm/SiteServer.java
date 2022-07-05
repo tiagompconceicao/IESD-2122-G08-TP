@@ -62,7 +62,6 @@ public class SiteServer {
                 .newBuilder()
                 .setIp(thisIP)
                 .setPort(thisPort)
-                .setType("TM")
                 .setName("TM1")
                 .build());
 

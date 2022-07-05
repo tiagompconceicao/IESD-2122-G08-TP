@@ -1,11 +1,12 @@
 package isos.tp1.isyiesd.cesregistry.serregistry;
 
 import IRegistry.IRegistryGrpc;
-import IRegistry.RegisterResult;
 import IRegistry.ServiceEndpoint;
 import IRegistry.Number;
+import IRegistry.ServiceEndpointClient;
 import IRegistry.ServiceRequest;
 import IRegistry.VectorServices;
+import IRegistry.VectorServicesClient;
 import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
 import java.text.SimpleDateFormat;
@@ -14,12 +15,16 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
 
+import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
+
 public class Registry extends IRegistryGrpc.IRegistryImplBase {
-    private String VECTOR_SERVICES = "Vector";
+
+    private ServiceEndpoint tm = null;
+    private ServiceEndpoint tplm = null;
 
     //info dos Vector Services
-    private final ConcurrentHashMap<String,ServiceEndpoint> services = new ConcurrentHashMap();
-    private int vectorID = 1;
+    private final ConcurrentHashMap<String,ServiceEndpoint> vectorServices = new ConcurrentHashMap();
+    private final ConcurrentHashMap<String,Integer> servicesClientPorts = new ConcurrentHashMap();
     private final Object lock = new Object();
     //expected number of vector services
     private final int numberOfVectorServices;
@@ -36,41 +41,35 @@ public class Registry extends IRegistryGrpc.IRegistryImplBase {
         this.currentNumberOfVectorServices = 0;
         this.formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         System.out.println(formatter.format(new Date())+": Coordinator Initiated.");
+
+        servicesClientPorts.put("TM1",30962);
+        servicesClientPorts.put("TPLM1",30963);
+        for (int i = 1;i <= numberOfVectorServices; i++){
+            servicesClientPorts.put("Vector"+i,30963+i);
+        }
     }
 
-
-    //TODO: HashMap<Nome,ServiceEndpoint>
-    //Corrigir lógica
-    //Sempre substituição ou criação de entradas no hashmap (não existem replicas)
     @Override
-    public void registerService(ServiceEndpoint serviceEndpoint, StreamObserver<RegisterResult> responseObserver){
+    public void registerService(ServiceEndpoint serviceEndpoint, StreamObserver<Empty> responseObserver){
         synchronized (lock){
             //Verify if endpoint type exists
-            if (!services.containsKey(serviceEndpoint.getType())) {
-                services.put(serviceEndpoint.getType(),new LinkedList<>());
-            }
-            if (serviceEndpoint.getName().isEmpty()){
-                //Vector
-                ServiceEndpoint newEndpoint = ServiceEndpoint.newBuilder()
-                        .setType(serviceEndpoint.getType())
-                        .setName(serviceEndpoint.getType()+vectorID)
-                        .setIp(serviceEndpoint.getIp())
-                        .setPort(serviceEndpoint.getPort()).build();
-                services.get(serviceEndpoint.getType()).push(newEndpoint);
-                vectorID++;
-            } else {
-                //TM ou TPLM
-                services.get(serviceEndpoint.getType()).clear();
-                services.get(serviceEndpoint.getType()).push(serviceEndpoint);
+            switch (serviceEndpoint.getName()){
+                case "TM1":
+                    this.tm = serviceEndpoint;
+                    break;
+                case "TPLM1":
+                    this.tplm = serviceEndpoint;
+                    break;
+                default:
+                    vectorServices.put(serviceEndpoint.getName(), serviceEndpoint);
+                    currentNumberOfVectorServices = vectorServices.size();
+                    break;
             }
 
-            if (serviceEndpoint.getType().equals(VECTOR_SERVICES)){
-                currentNumberOfVectorServices++;
-            }
+            System.out.println(formatter.format(new Date())+": Service: " + serviceEndpoint.getName() + " registered.");
 
-            String serviceName = serviceEndpoint.getType() + services.get(serviceEndpoint.getType()).size();
             lock.notifyAll();
-            responseObserver.onNext(RegisterResult.newBuilder().setName(serviceName).build());
+            responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         }
     }
@@ -78,12 +77,7 @@ public class Registry extends IRegistryGrpc.IRegistryImplBase {
     @Override
     public void getService(ServiceRequest serviceRequest, StreamObserver<ServiceEndpoint> responseObserver){
         synchronized (lock){
-            if (!services.containsKey(serviceRequest.getType())){
-                responseObserver.onError(new Throwable("Requested service type does not exists"));
-                return;
-            }
-
-            ServiceEndpoint serviceEndpoint = getService(serviceRequest.getType(),serviceRequest.getName());
+            ServiceEndpoint serviceEndpoint = getService(serviceRequest.getName());
 
             if (serviceEndpoint == null){
                 responseObserver.onError(new Throwable("Requested service does not exists"));
@@ -95,46 +89,71 @@ public class Registry extends IRegistryGrpc.IRegistryImplBase {
         }
     }
 
-    private ServiceEndpoint getService(String type,String name){
-        System.out.println(formatter.format(new Date())+": service requested.");
-        ServiceEndpoint tmService = getServiceByName(type,name);
-        if(tmService == null) {
+    @Override
+    public void getServiceClient(ServiceRequest request, StreamObserver<ServiceEndpointClient> responseObserver){
+        ServiceEndpointClient serviceEndpointClient = ServiceEndpointClient
+                .newBuilder()
+                .setName(request.getName())
+                .setPort(servicesClientPorts.get(request.getName()))
+                .build();
+
+        responseObserver.onNext(serviceEndpointClient);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void getVectorServicesClient(Empty request, StreamObserver<VectorServicesClient> responseObserver) {
+        VectorServicesClient.Builder vsB = VectorServicesClient.newBuilder();
+
+        for (int i = 1;i <= numberOfVectorServices; i++){
+            String name = "Vector"+i;
+            int port = servicesClientPorts.get(name);
+            vsB.addVectors(ServiceEndpointClient
+                    .newBuilder()
+                    .setName(name)
+                    .setPort(port)
+                    .build());
+        }
+
+        responseObserver.onNext(vsB.build());
+        responseObserver.onCompleted();
+    }
+
+    private ServiceEndpoint getService(String name){
+        System.out.println(formatter.format(new Date())+": Service: " + name + " requested.");
+
+        //fast-path
+        ServiceEndpoint service = getServiceByName(name);
+        if(service == null) {
             long deadline = System.currentTimeMillis() + timeoutMillisTM;
             long remaining = deadline - System.currentTimeMillis();
+
             //wait-path
             while (true) {
                 try {
-                    System.out.println(formatter.format(new Date())+": waiting service request notified, " +
-                            "still waiting on service info.");
+                    System.out.println(formatter.format(new Date())+": Waiting for service: " + name);
                     lock.wait(remaining);
                 } catch (InterruptedException e) {
                     return null;
                 }
-                tmService = getServiceByName(type,name);
-                if (tmService != null) {
-                    System.out.println(formatter.format(new Date())+": service info given to requester.");
-                    return tmService;
+                service = getServiceByName(name);
+                if (service != null) {
+
+                    System.out.println(formatter.format(new Date())+": Service: " + name + " info given to requester.");
+                    return service;
                 }
                 remaining = deadline - System.currentTimeMillis();
                 if (remaining <= 0) {
-                    System.out.println(formatter.format(new Date())+": Timeout Reached Cancelling" +
-                            "service info requests.");
+
+                    System.out.println(formatter.format(new Date())+": Timeout Reached. Cancelling service: "
+                            + name + " info requests.");
                     return null;
                 }
             }
         }
-        System.out.println(formatter.format(new Date())+": service info given to requester.");
-        return tmService;
-    }
 
-
-    private ServiceEndpoint getServiceByName(String type, String name){
-        for (ServiceEndpoint service: services.get(type)) {
-            if (service.getName().equals(name)){
-                return service;
-            }
-        }
-        return null;
+        System.out.println(formatter.format(new Date())+": Service: " + name + " info given to requester.");
+        return service;
     }
 
     @Override
@@ -159,7 +178,7 @@ public class Registry extends IRegistryGrpc.IRegistryImplBase {
                         System.out.println(formatter.format(new Date())+": Wait Done. All Vector Services " +
                           "Registered, Giving Info to Requesters.");
                         VectorServices.Builder vsB = VectorServices.newBuilder();
-                        for(ServiceEndpoint sep : services.get(VECTOR_SERVICES)) {
+                        for(ServiceEndpoint sep : vectorServices.values()) {
                             vsB.addVectors(sep);
                         }
                         responseObserver.onNext(vsB.build());
@@ -176,7 +195,7 @@ public class Registry extends IRegistryGrpc.IRegistryImplBase {
                 }
             }
             VectorServices.Builder vsB = VectorServices.newBuilder();
-            for(ServiceEndpoint sep : services.get(VECTOR_SERVICES)) {
+            for(ServiceEndpoint sep : vectorServices.values()) {
                vsB.addVectors(sep);
             }
             System.out.println(formatter.format(new Date())+": All Vector Services present and given to requester.");
@@ -192,6 +211,26 @@ public class Registry extends IRegistryGrpc.IRegistryImplBase {
             responseObserver.onNext(Number.newBuilder().setValue(numberOfVectorServices).build());
             responseObserver.onCompleted();
         }
+    }
+
+    private ServiceEndpoint getServiceByName(String name){
+        ServiceEndpoint service = null;
+        switch (name){
+            case "TM1":
+                if (tm != null){
+                    service = tm;
+                }
+                break;
+            case "TPLM1":
+                if (tplm != null){
+                    service = tplm;
+                }
+                break;
+            default:
+                service = vectorServices.get(name);
+                break;
+        }
+        return service;
     }
 
 }

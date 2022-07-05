@@ -11,22 +11,19 @@ public class VectorClientAsyncAbortTest {
     private static final int READ_MODE = 1;
     private static final int WRITE_MODE = 2;
 
-    private static String coordinatorIP = "localhost";
-    private static int coordinatorPort = 9000;
+    private static String nodeIP = "localhost";
+    private static final int registryPort = 30961;
 
     private static final Logger logger = Logger.getLogger(VectorClientAsyncAbortTest.class.getName());
 
     public static void main(String args[]) {
         if (args.length == 1) {
-            coordinatorPort = Integer.parseInt(args[0]);
-        } else if (args.length == 2) {
-            coordinatorIP = args[0];
-            coordinatorPort = Integer.parseInt(args[1]);
+            nodeIP = args[0];
         }
 
         Transaction transaction = null;
         try {
-            ConnectionManager cm = new ConnectionManager(coordinatorIP, coordinatorPort, logger);
+            ConnectionManager cm = new ConnectionManager(nodeIP, registryPort, logger);
 
             transaction = cm.transactionManagerProxy.txBegin(Empty.newBuilder().build());
 

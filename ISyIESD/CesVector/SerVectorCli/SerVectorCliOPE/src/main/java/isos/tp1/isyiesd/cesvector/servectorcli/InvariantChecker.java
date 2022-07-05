@@ -1,9 +1,8 @@
 package isos.tp1.isyiesd.cesvector.servectorcli;
 
-import IRegistry.ServiceEndpoint;
+import IRegistry.ServiceEndpointClient;
 import com.google.protobuf.Empty;
 
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,27 +16,24 @@ import transactionManagerTX.Result;
 import transactionManagerTX.Transaction;
 import vector.IVectorGrpc;
 import vector.ReadMessage;
-import vector.WriteMessage;
 
 public class InvariantChecker {
     private static final int READ_MODE = 1;
     private static final int WRITE_MODE = 2;
 
-    private static String coordinatorIP = "localhost";
-    private static int coordinatorPort = 9000;
+    private static String nodeIP = "localhost";
+    private static final int registryPort = 30961;
 
     private static final Logger logger = Logger.getLogger(VectorClient3.class.getName());
 
     public static void main(String[] args) {
         if (args.length == 1) {
-            coordinatorPort = Integer.parseInt(args[0]);
-        } else if (args.length == 2) {
-            coordinatorIP = args[0];
-            coordinatorPort = Integer.parseInt(args[1]);
+            nodeIP = args[0];
         }
+
         Transaction transaction = null;
         try {
-            ConnectionManager cm = new ConnectionManager(coordinatorIP, coordinatorPort, logger);
+            ConnectionManager cm = new ConnectionManager(nodeIP, registryPort, logger);
             //Creates a transaction
             transaction = cm.transactionManagerProxy.txBegin(Empty.newBuilder().build());
 
@@ -62,12 +58,12 @@ public class InvariantChecker {
             cm.lockManagerProxy.getLocks(locksRequest);
             logger.info("Transaction: " + transaction.getTid() + " || " + "Locks acquired!");
 
-            List<ServiceEndpoint> vectors = cm.coordinatorProxy.getVectorServices(Empty.newBuilder().build()).getVectorsList();
+            List<ServiceEndpointClient> vectors = cm.coordinatorProxy.getVectorServicesClient(Empty.newBuilder().build()).getVectorsList();
 
             int sum = 0;
-            for (ServiceEndpoint sep : vectors) {
+            for (ServiceEndpointClient sep : vectors) {
                 ManagedChannel sepMC = ManagedChannelBuilder
-                        .forAddress(sep.getIp(), sep.getPort())
+                        .forAddress(nodeIP, sep.getPort())
                         .usePlaintext()
                         .build();
                 IVectorGrpc.IVectorBlockingStub sepProxy = IVectorGrpc.newBlockingStub(sepMC);
