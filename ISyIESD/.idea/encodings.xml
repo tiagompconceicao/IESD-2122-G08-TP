@@ -1,23 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/CesQuarkus/SerQuarkus/SerQuarkusOPE/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/CesQuarkus/SerQuarkus/SerQuarkusOPE/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/CesRegistry/SerRegistry/SerRegistryAPIM/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/CesRegistry/SerRegistry/SerRegistryAPIM/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/CesRegistry/SerRegistry/SerRegistryOPE/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/CesRegistry/SerRegistry/SerRegistryOPE/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/CesTC/SerTM/SerTMAPIM/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/CesTC/SerTM/SerTMAPIM/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/CesTC/SerTM/SerTMOPE/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/CesTC/SerTM/SerTMOPE/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/CesTC/SerTPLM/SerTPLMAPIM/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/CesTC/SerTPLM/SerTPLMAPIM/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/CesTC/SerTPLM/SerTPLMOPE/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/CesTC/SerTPLM/SerTPLMOPE/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/CesVector/SerVector/SerVectorAPIM/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/CesVector/SerVector/SerVectorAPIM/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/CesVector/SerVectorCli/SerVectorCliOPE/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/CesVector/SerVectorCli/SerVectorCliOPE/src/main/resources" charset="UTF-8" />
   </component>
 </project>
