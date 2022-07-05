@@ -37,13 +37,13 @@ public class ConnectionManager {
 
     public static Logger logger;
 
-    public ConnectionManager(String nodeIP, int port, Logger logger) {
+    public ConnectionManager(String nodeIP, int registryPort, Logger logger) {
         vectorServices = new HashMap<>();
         vectorServiceChannels = new LinkedList<>();
         ConnectionManager.logger = logger;
 
         coordinatorChannel = ManagedChannelBuilder
-          .forAddress(nodeIP, port)
+          .forAddress(nodeIP, registryPort)
           .usePlaintext()
           .build();
         coordinatorProxy = IRegistryGrpc.newBlockingStub(coordinatorChannel);
