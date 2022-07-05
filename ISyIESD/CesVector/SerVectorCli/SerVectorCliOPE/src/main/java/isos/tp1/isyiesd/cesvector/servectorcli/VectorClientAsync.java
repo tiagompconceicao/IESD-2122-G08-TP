@@ -2,9 +2,6 @@ package isos.tp1.isyiesd.cesvector.servectorcli;
 
 import com.google.protobuf.Empty;
 
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lockManager.LockRequest;
@@ -14,29 +11,24 @@ import transactionManagerTX.Result;
 import transactionManagerTX.Transaction;
 import vector.ReadMessage;
 import vector.WriteMessage;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 
 public class VectorClientAsync {
     private static final int READ_MODE = 1;
     private static final int WRITE_MODE = 2;
 
-    private static String coordinatorIP = "172.21.83.158";
-    private static int coordinatorPort = 30961;
+    private static String nodeIP = "localhost";
+    private static final int registryPort = 30961;
 
     private static final Logger logger = Logger.getLogger(VectorClientAsync.class.getName());
 
     public static void main(String args[]) {
         if (args.length == 1) {
-            coordinatorPort = Integer.parseInt(args[0]);
-        } else if (args.length == 2) {
-            coordinatorIP = args[0];
-            coordinatorPort = Integer.parseInt(args[1]);
+            nodeIP = args[0];
         }
 
         Transaction transaction = null;
         try {
-            ConnectionManager cm = new ConnectionManager(coordinatorIP, coordinatorPort, logger);
+            ConnectionManager cm = new ConnectionManager(nodeIP, registryPort, logger);
 
             transaction = cm.transactionManagerProxy.txBegin(Empty.newBuilder().build());
 

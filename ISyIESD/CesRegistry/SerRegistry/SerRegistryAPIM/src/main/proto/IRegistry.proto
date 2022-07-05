@@ -7,11 +7,12 @@ package forum;
 
 service IRegistry {
   rpc getVectorServices(google.protobuf.Empty) returns (VectorServices);
-
   rpc getNumberOfVectorServices(google.protobuf.Empty) returns (Number);
-
   rpc getService(ServiceRequest) returns (ServiceEndpoint);
-  rpc registerService(ServiceEndpoint) returns (RegisterResult);
+  rpc registerService(ServiceEndpoint) returns (google.protobuf.Empty);
+
+  rpc getServiceClient(ServiceRequest) returns (ServiceEndpointClient);
+  rpc getVectorServicesClient(google.protobuf.Empty) returns (VectorServicesClient);
 }
 
 message Result {
@@ -20,22 +21,24 @@ message Result {
 
 message ServiceRequest {
   string name = 1;
-  string type = 2;
 }
-
-message RegisterResult{
-  string name = 1;
+message ServiceEndpointClient {
+  int32 port = 1;
+  string name = 2;
 }
 
 message ServiceEndpoint {
   string ip = 1;
   int32 port = 2;
   string name = 3;
-  string type = 4;
 }
 
 message VectorServices {
   repeated ServiceEndpoint vectors = 1;
+}
+
+message VectorServicesClient{
+  repeated ServiceEndpointClient vectors = 1;
 }
 
 message Number {

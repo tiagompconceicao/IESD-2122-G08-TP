@@ -1,7 +1,9 @@
 package isos.tp1.isyiesd.cesvector.servectorcli;
 
 import IRegistry.IRegistryGrpc;
+import IRegistry.ServiceEndpointClient;
 import IRegistry.ServiceRequest;
+import IRegistry.VectorServicesClient;
 import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -35,28 +37,28 @@ public class ConnectionManager {
 
     public static Logger logger;
 
-    public ConnectionManager(String ip, int port, Logger logger) {
+    public ConnectionManager(String nodeIP, int port, Logger logger) {
         vectorServices = new HashMap<>();
         vectorServiceChannels = new LinkedList<>();
         ConnectionManager.logger = logger;
 
         coordinatorChannel = ManagedChannelBuilder
-          .forAddress(ip, port)
+          .forAddress(nodeIP, port)
           .usePlaintext()
           .build();
         coordinatorProxy = IRegistryGrpc.newBlockingStub(coordinatorChannel);
 
-        ServiceEndpoint transactionManagerEP = coordinatorProxy.getService(ServiceRequest.newBuilder().setType("TM").setName("TM1").build());
+        ServiceEndpointClient transactionManagerEP = coordinatorProxy.getServiceClient(ServiceRequest.newBuilder().setName("TM1").build());
         transactionManagerChannel = ManagedChannelBuilder
-          .forAddress(transactionManagerEP.getIp(), transactionManagerEP.getPort())
+          .forAddress(nodeIP, transactionManagerEP.getPort())
           .usePlaintext()
           .build();
         transactionManagerProxy = ITransactionManagerTXGrpc.newBlockingStub(transactionManagerChannel);
 
-        VectorServices vectorServiceEP = coordinatorProxy.getVectorServices(Empty.newBuilder().build());
-        for(ServiceEndpoint sEP : vectorServiceEP.getVectorsList()) {
+        VectorServicesClient vectorServiceEP = coordinatorProxy.getVectorServicesClient(Empty.newBuilder().build());
+        for(ServiceEndpointClient sEP : vectorServiceEP.getVectorsList()) {
             ManagedChannel vectorServiceChannel = ManagedChannelBuilder
-              .forAddress(sEP.getIp(), sEP.getPort())
+              .forAddress(nodeIP, sEP.getPort())
               .usePlaintext()
               .build();
             IVectorBlockingStub proxy = IVectorGrpc.newBlockingStub(vectorServiceChannel);
@@ -64,9 +66,9 @@ public class ConnectionManager {
             vectorServiceChannels.add(vectorServiceChannel);
         }
 
-        ServiceEndpoint lockManagerEP = coordinatorProxy.getService(ServiceRequest.newBuilder().setType("TPLM").setName("TPLM1").build());
+        ServiceEndpointClient lockManagerEP = coordinatorProxy.getServiceClient(ServiceRequest.newBuilder().setName("TPLM1").build());
         lockManagerChannel = ManagedChannelBuilder
-          .forAddress(lockManagerEP.getIp(), lockManagerEP.getPort())
+          .forAddress(nodeIP, lockManagerEP.getPort())
           .usePlaintext()
           .build();
         lockManagerProxy = ILockManagerGrpc.newBlockingStub(lockManagerChannel);
@@ -76,7 +78,6 @@ public class ConnectionManager {
     private static void close(ManagedChannel mc, String server) throws InterruptedException {
         if (mc!=null) {
             //Unsubscribe user from server
-            logger.log(Level.INFO, "Shutdown channel to server: " + server);
             mc.shutdown().awaitTermination(2, TimeUnit.SECONDS);
         }
     }
@@ -88,5 +89,7 @@ public class ConnectionManager {
         for(ManagedChannel mc : vectorServiceChannels) {
             ConnectionManager.close(mc, "VectorServiceServer");
         }
+
+        logger.log(Level.INFO, "Shut down channels");
     }
 }

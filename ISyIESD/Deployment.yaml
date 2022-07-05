@@ -40,6 +40,34 @@ spec:
       nodePort: 30963
   type: NodePort
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vector1-service
+spec:
+  selector:
+    app: vector1
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9003
+      nodePort: 30964
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vector2-service
+spec:
+  selector:
+    app: vector2
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9003
+      nodePort: 30965
+  type: NodePort
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -82,6 +110,9 @@ spec:
       containers:
         - name: tplm
           image: tiago47611/tplm
+          ports:
+            - containerPort: 9002
+              protocol: TCP
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -102,3 +133,54 @@ spec:
       containers:
         - name: tm
           image: tiago47611/tm
+          ports:
+            - containerPort: 9001
+              protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vector1
+  labels:
+    app: vector1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vector1
+  template:
+    metadata:
+      labels:
+        app: vector1
+    spec:
+      containers:
+        - name: vector1
+          image: tiago47611/vector
+          args: ["Vector1"]
+          ports:
+            - containerPort: 9003
+              protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vector2
+  labels:
+    app: vector2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vector2
+  template:
+    metadata:
+      labels:
+        app: vector2
+    spec:
+      containers:
+        - name: vector2
+          image: tiago47611/vector
+          args: ["Vector2"]
+          ports:
+            - containerPort: 9003
+              protocol: TCP

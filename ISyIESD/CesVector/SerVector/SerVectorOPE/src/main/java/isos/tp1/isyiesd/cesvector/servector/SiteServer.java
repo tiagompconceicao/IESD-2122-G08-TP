@@ -23,15 +23,16 @@ public class SiteServer {
     private static final String SERVICE_VAR_NAME = "REGISTRY_SERVICE_SERVICE_HOST";
     public static final Logger logger = Logger.getLogger(SiteServer.class.getName());
     private static String thisIP = "localhost";
-    private static int thisPort = 9005;
-    private static String coordinatorIP = "172.21.83.158";
-    private static final int coordinatorPort = 30961;
+    private static final int thisPort = 9003;
+    private static String coordinatorIP = "localhost";
+    private static final int coordinatorPort = 9000;
+    private static String vectorName = "Vector1";
     //name of this Vector Service
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     public static void main(String[] args) {
         if (args.length == 1) {
-            thisPort = Integer.parseInt(args[0]);
+            vectorName = args[0];
         }
 
         String envVarIP = System.getenv(SERVICE_VAR_NAME);
@@ -53,22 +54,22 @@ public class SiteServer {
               .newBlockingStub(coordinatorChannel);
 
             //regista-se no coordenador como VectorService
-            String vectorServiceName = coordinatorProxy.registerService(ServiceEndpoint
+            coordinatorProxy.registerService(ServiceEndpoint
               .newBuilder()
               .setIp(thisIP)
               .setPort(thisPort)
-              .setType("Vector")
-              .build()).getName();
+              .setName(vectorName)
+              .build());
 
             System.out.println(formatter.format(new Date())+": Registered on Coordinator as a Vector" +
               "Service.");
             System.out.println("    -Getting TM info.");
             //Obtem Info do Transaction Manager
-            ServiceEndpoint tm = coordinatorProxy.getService(ServiceRequest.newBuilder().setType("TM").setName("TM1").build());
+            ServiceEndpoint tm = coordinatorProxy.getService(ServiceRequest.newBuilder().setName("TM1").build());
             System.out.println(formatter.format(new Date())+": TM Info Obtained.");
 
             //inicia o Vector Service com a info de connexão do TM e o nome do Vector Service
-            VectorEndPoint vectorEP = new VectorEndPoint(tm.getIp(), tm.getPort(), vectorServiceName);
+            VectorEndPoint vectorEP = new VectorEndPoint(tm.getIp(), tm.getPort(), vectorName);
             //inicia o serviço de comunicação com o TM (AX-proto)
             TransactionManagerAX transactionManagerService = new TransactionManagerAX(vectorEP);
             //inicia o serviço Vector
