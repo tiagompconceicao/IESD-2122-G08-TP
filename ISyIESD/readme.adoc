@@ -38,8 +38,13 @@ To generate all binary artifacts execute the following command in the root direc
 
 === Docker
 
-This section is only for information purposes, don't execute it.
-The execute.bat file automates the creation and submission of the docker images to the remote repository. Which are accessed to instantiate the containers inside the Pods, on the k8s cluster.
+This section is only for information purposes, to explain
+the steps taken to create and expose the docker images,
+don't execute it.
+The execute.bat file automates the creation and submission
+of the docker images to an remote repository.
+Which are accessed to instantiate the containers
+inside the Pods, on the k8s cluster.
 
 
 === Creation of Kubernetes resources

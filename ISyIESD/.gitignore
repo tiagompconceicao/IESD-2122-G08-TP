@@ -4,7 +4,7 @@
 
 # Ignore Gradle build output directory
 build
-
+.idea
 CesRegistry/SerRegistry/SerRegistryAPIM/target/
 CesRegistry/SerRegistry/SerRegistryOPE/target/
 CesTC/SerTPLM/SerTPLMAPIM/target/
