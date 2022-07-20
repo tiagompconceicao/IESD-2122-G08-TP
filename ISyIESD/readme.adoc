@@ -16,7 +16,7 @@ Minikube with hyper-V (might not work with Windows 10 Home):
 
 Minikube with Virtual Box:
 
-	minikube start --driver=vbox --no-vtx-check
+	minikube start --driver=virtualbox --no-vtx-check
 
 To add a worker node: (Not required!!)
 
