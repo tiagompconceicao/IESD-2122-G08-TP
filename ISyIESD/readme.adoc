@@ -1,4 +1,60 @@
 = ISyIESD project
 
-Group simple examples supporting the discussion of distributed systems concepts.
+Group project supporting the discussion of distributed systems concepts.
 
+=== Pre-requisites
+
+* Minikube
+* Maven
+* Java 11
+* Docker
+
+=== Create Kubernetes network
+Minikube with hyper-V (might not work with Windows 10 Home):
+
+	minikube start --driver=hyperv --no-vtx-check
+
+Minikube with Virtual Box:
+
+	minikube start --driver=vbox --no-vtx-check
+
+To add a worker node: (Not required!!)
+
+    minikube node add --worker
+
+Minikube driver must be VM based (No Docker!)
+
+In the end to stop node and delete cluster run:
+
+    minikube delete
+
+The previous command might be required before creating the cluster for the first time (delete previous configurations).
+
+=== Compilation and creation of services binaries
+
+To generate all binary artifacts execute the following command in the root directory:
+
+    mvn clean install
+
+=== Docker
+
+This section is only for information purposes, to explain
+the steps taken to create and expose the docker images,
+don't execute it.
+The execute.bat file automates the creation and submission
+of the docker images to an remote repository.
+Which are accessed to instantiate the containers
+inside the Pods, on the k8s cluster.
+
+
+=== Creation of Kubernetes resources
+
+Create k8s cluster resources (instanciate distributed system):
+
+    kubectl apply -f ./Deployment.yaml
+
+Obtain node IP from:
+
+	kubectl get nodes -o wide
+
+Put previously obtained IP as parameter for clients Application Programs .

@@ -1,6 +1,3 @@
-::Maven setup
-::Run in terminal: mvn clean install
-
 ::Docker setup
 ECHO Building Docker images
 docker build -t registry .\CesRegistry\SerRegistry\SerRegistryOPE\
@@ -20,6 +17,3 @@ docker push tiago47611/tm:latest
 docker push tiago47611/tplm:latest
 docker push tiago47611/vector:latest
 
-::Kubernetes setup
-ECHO Deploying system
-kubectl apply -f ./Deployment.yaml
