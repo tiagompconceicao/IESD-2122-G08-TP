@@ -27,11 +27,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>isos.tp1.isyiesd.cestc.sercoordinator</groupId>
-			<artifactId>SerCoordinatorAPIM</artifactId>
-			<version>0.1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>isos.tp1.isyiesd.cesvector.servector</groupId>
 			<artifactId>SerVectorAPIM</artifactId>
 			<version>0.1.0</version>
